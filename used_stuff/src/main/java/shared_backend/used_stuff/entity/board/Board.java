@@ -7,6 +7,8 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.transaction.annotation.Transactional;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -29,14 +31,16 @@ public class Board {
 
 	private String password;
 
+	private String title;
+
 	private String content;
 
 	@Enumerated(STRING)
 	private BoardStatus status;
 
-	private Long likes;
+	private int likes;
 
-	private Long dislikes;
+	private int dislikes;
 
 	private LocalDateTime createDate;
 
@@ -46,5 +50,28 @@ public class Board {
 	public void addComment(BoardComment comment) {
 		comment.setBoard(this);
 		this.getBoardComments().add(comment);
+	}
+
+	public Board() {
+	}
+
+	public void likeBoard() {
+		this.likes = likes + 1;
+	}
+
+	public void dislikeBoard() {
+		this.dislikes = dislikes + 1;
+	}
+
+	public Board(String writer, String password, String title, String content) {
+		this.writer = writer;
+		this.password = password;
+		this.title = title;
+		this.content = content;
+		this.status = BoardStatus.regist;
+		this.likes = 0;
+		this.dislikes = 0;
+		this.createDate = LocalDateTime.now();
+		this.updateDate = LocalDateTime.now();
 	}
 }
