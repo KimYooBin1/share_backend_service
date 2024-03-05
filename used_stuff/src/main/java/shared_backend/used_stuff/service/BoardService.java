@@ -17,7 +17,7 @@ import shared_backend.used_stuff.dto.BoardResponse;
 import shared_backend.used_stuff.dto.CreateBoardRequest;
 import shared_backend.used_stuff.dto.UpdateBoardRequest;
 import shared_backend.used_stuff.entity.board.Board;
-import shared_backend.used_stuff.entity.board.BoardStatus;
+import shared_backend.used_stuff.entity.board.Status;
 import shared_backend.used_stuff.repository.BoardRepository;
 
 @Service
@@ -77,7 +77,7 @@ public class BoardService {
 	public void deleteBoard(Long id, UpdateBoardRequest request) {
 		Board board = boardRepository.findById(id).get();
 		checkPW(board.getPassword(), request.getPassword());
-		board.setStatus(BoardStatus.delete);
+		board.setStatus(Status.delete);
 
 	}
 

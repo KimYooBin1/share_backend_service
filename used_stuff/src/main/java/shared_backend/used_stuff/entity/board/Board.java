@@ -33,7 +33,7 @@ public class Board {
 	private String content;
 
 	@Enumerated(STRING)
-	private BoardStatus status;
+	private Status status;
 
 	private int likes;
 
@@ -65,7 +65,7 @@ public class Board {
 		this.password = password;
 		this.title = title;
 		this.content = content;
-		this.status = BoardStatus.regist;
+		this.status = Status.regist;
 		this.likes = 0;
 		this.dislikes = 0;
 		this.createDate = LocalDateTime.now();

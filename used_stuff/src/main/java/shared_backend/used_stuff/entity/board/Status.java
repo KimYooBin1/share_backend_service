@@ -1,5 +1,5 @@
 package shared_backend.used_stuff.entity.board;
 
-public enum BoardStatus {
+public enum Status {
 	regist, delete, edit
 }
