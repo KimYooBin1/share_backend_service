@@ -16,4 +16,11 @@ public class CreateBoardRequest {
 	private String title;
 	@NotEmpty
 	private String content;
+
+	public CreateBoardRequest(String writer, String password, String title, String content) {
+		this.writer = writer;
+		this.password = password;
+		this.title = title;
+		this.content = content;
+	}
 }

@@ -9,4 +9,14 @@ public class UpdateBoardRequest {
 	private String password;
 	private String title;
 	private String content;
+
+	public UpdateBoardRequest(String password, String title, String content) {
+		this.password = password;
+		this.title = title;
+		this.content = content;
+	}
+
+	public UpdateBoardRequest(String password) {
+		this.password = password;
+	}
 }

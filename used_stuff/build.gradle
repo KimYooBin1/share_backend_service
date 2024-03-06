@@ -33,6 +33,8 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-security' //spring security
 
 	runtimeOnly 'com.mysql:mysql-connector-j' //mysql 연동
+
+	runtimeOnly 'com.h2database:h2'	//test DB
 }
 
 tasks.named('test') {

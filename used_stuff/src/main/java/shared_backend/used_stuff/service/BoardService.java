@@ -76,12 +76,13 @@ public class BoardService extends Check {
 	}
 
 	@Transactional
-	public void deleteBoard(Long id, UpdateBoardRequest request) {
+	public Board deleteBoard(Long id, UpdateBoardRequest request) {
 		Board board = boardRepository.findById(id).get();
 		checkPW(board.getPassword(), request.getPassword());
 		checkState(board.getStatus());
 		board.setStatus(delete);
 
+		return board;
 	}
 
 	@Transactional
