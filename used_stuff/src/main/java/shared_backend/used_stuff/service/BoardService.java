@@ -23,7 +23,7 @@ import shared_backend.used_stuff.repository.BoardRepository;
 @Service
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
-public class BoardService {
+public class BoardService extends PasswordCheck{
 	private final BoardRepository boardRepository;
 
 	public List<BoardResponse> boards(int page, HttpServletResponse response) throws IOException {
@@ -47,12 +47,6 @@ public class BoardService {
 
 	public Board findBoard(Long id){
 		return boardRepository.findById(id).get();
-	}
-
-	public void checkPW(String Pw, String C_Pw){
-		if (!Objects.equals(Pw, C_Pw)) {
-			throw new IllegalArgumentException("password not equal");
-		}
 	}
 
 	@Transactional
@@ -84,7 +78,7 @@ public class BoardService {
 	@Transactional
 	public Board likeBoard(Long id, String type) {
 		Board board = boardRepository.findById(id).get();
-		if(type == "like"){
+		if(Objects.equals(type, "like")){
 			board.likeBoard();
 		}else{
 			board.dislikeBoard();
