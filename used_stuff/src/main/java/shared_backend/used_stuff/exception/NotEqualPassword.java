@@ -1,4 +1,4 @@
-package shared_backend.used_stuff.service;
+package shared_backend.used_stuff.exception;
 
 public class NotEqualPassword extends RuntimeException{
 	public NotEqualPassword() {

@@ -71,4 +71,5 @@ public class Board {
 		this.createDate = LocalDateTime.now();
 		this.updateDate = LocalDateTime.now();
 	}
+
 }

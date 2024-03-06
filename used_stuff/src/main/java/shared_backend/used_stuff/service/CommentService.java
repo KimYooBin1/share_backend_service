@@ -19,7 +19,7 @@ import shared_backend.used_stuff.repository.CommentRepository;
 @Service
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
-public class CommentService extends PasswordCheck{
+public class CommentService extends Check {
 	private final CommentRepository commentRepository;
 	private final BoardService boardService;
 	public List<CommentResponse> comments(Long boardId) {
@@ -32,6 +32,7 @@ public class CommentService extends PasswordCheck{
 
 	public CommentResponse createComment(Long boardId, CreateCommentRequest request) {
 		Board board = boardService.findBoard(boardId);
+		checkState(board.getStatus());
 		BoardComment comment = new BoardComment(request.getWriter(), request.getPassword(), request.getContent());
 		board.addComment(comment);
 		commentRepository.save(comment);
@@ -41,14 +42,21 @@ public class CommentService extends PasswordCheck{
 
 	public CommentResponse editComment(Long commentId, UpdateCommentRequest request) {
 		BoardComment comment = commentRepository.findById(commentId).get();
+		//comment board fetch join 으로 변경하기
+		checkState(comment.getBoard().getStatus());
+		checkState(comment.getStatus());
 		checkPW(comment.getPassword(), request.getPassword());
 		comment.setContent(request.getContent());
+		comment.setStatus(edit);
 
 		return new CommentResponse(comment.getBoard().getId(), comment);
 	}
 
 	public CommentResponse deleteComment(Long commentId, UpdateCommentRequest request){
 		BoardComment comment = commentRepository.findById(commentId).get();
+		//comment board fetch join 으로 변경하기
+		checkState(comment.getBoard().getStatus());
+		checkState(comment.getStatus());
 		checkPW(comment.getPassword(), request.getPassword());
 		comment.setStatus(delete);
 

@@ -1,6 +1,8 @@
 package shared_backend.used_stuff.service;
 
+import static java.time.LocalDateTime.*;
 import static java.util.stream.Collectors.*;
+import static shared_backend.used_stuff.entity.board.Status.*;
 
 import java.io.IOException;
 import java.util.List;
@@ -17,13 +19,12 @@ import shared_backend.used_stuff.dto.BoardResponse;
 import shared_backend.used_stuff.dto.CreateBoardRequest;
 import shared_backend.used_stuff.dto.UpdateBoardRequest;
 import shared_backend.used_stuff.entity.board.Board;
-import shared_backend.used_stuff.entity.board.Status;
 import shared_backend.used_stuff.repository.BoardRepository;
 
 @Service
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
-public class BoardService extends PasswordCheck{
+public class BoardService extends Check {
 	private final BoardRepository boardRepository;
 
 	public List<BoardResponse> boards(int page, HttpServletResponse response) throws IOException {
@@ -61,8 +62,15 @@ public class BoardService extends PasswordCheck{
 	public Board editBoard(Long id, UpdateBoardRequest request) {
 		Board board = boardRepository.findById(id).get();
 		checkPW(board.getPassword(), request.getPassword());
-		board.setTitle(request.getTitle());
-		board.setContent(request.getContent());
+		checkState(board.getStatus());
+		if(request.getTitle() != null){
+			board.setTitle(request.getTitle());
+		}
+		if (request.getContent() != null) {
+			board.setContent(request.getContent());
+		}
+		board.setStatus(edit);
+		board.setUpdateDate(now());
 
 		return board;
 	}
@@ -71,13 +79,15 @@ public class BoardService extends PasswordCheck{
 	public void deleteBoard(Long id, UpdateBoardRequest request) {
 		Board board = boardRepository.findById(id).get();
 		checkPW(board.getPassword(), request.getPassword());
-		board.setStatus(Status.delete);
+		checkState(board.getStatus());
+		board.setStatus(delete);
 
 	}
 
 	@Transactional
 	public Board likeBoard(Long id, String type) {
 		Board board = boardRepository.findById(id).get();
+		checkState(board.getStatus());
 		if(Objects.equals(type, "like")){
 			board.likeBoard();
 		}else{
