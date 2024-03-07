@@ -14,4 +14,10 @@ public class CreateCommentRequest {
 	private String password;
 	@NotEmpty
 	private String content;
+
+	public CreateCommentRequest(String writer, String password, String content) {
+		this.writer = writer;
+		this.password = password;
+		this.content = content;
+	}
 }

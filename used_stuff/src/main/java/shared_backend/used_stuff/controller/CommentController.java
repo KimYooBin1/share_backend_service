@@ -14,6 +14,7 @@ import lombok.RequiredArgsConstructor;
 import shared_backend.used_stuff.dto.CommentResponse;
 import shared_backend.used_stuff.dto.CreateCommentRequest;
 import shared_backend.used_stuff.dto.UpdateCommentRequest;
+import shared_backend.used_stuff.entity.board.BoardComment;
 import shared_backend.used_stuff.service.CommentService;
 
 @RestController
@@ -30,18 +31,20 @@ public class CommentController {
 	@PostMapping("/boards/{board_id}/comments/create")
 	public CommentResponse createComment(@PathVariable("board_id") Long boardId,
 		@RequestBody @Valid CreateCommentRequest request) {
-		return commentService.createComment(boardId, request);
+		return new CommentResponse(boardId, commentService.createComment(boardId, request));
 	}
 
 	@PostMapping("/comments/{comment_id}/edit")
 	public CommentResponse editComment(@PathVariable("comment_id") Long commentId, @RequestBody UpdateCommentRequest request) {
-		return commentService.editComment(commentId, request);
+		BoardComment comment = commentService.editComment(commentId, request);
+		return new CommentResponse(comment.getBoard().getId(), comment);
 	}
 
 
 	@PostMapping("/comments/{comment_id}/delete")
 	public CommentResponse deleteComment(@PathVariable("comment_id") Long commentId, @RequestBody UpdateCommentRequest request) {
-		return commentService.deleteComment(commentId, request);
+		BoardComment comment = commentService.deleteComment(commentId, request);
+		return new CommentResponse(comment.getBoard().getId(), comment);
 	}
 
 }

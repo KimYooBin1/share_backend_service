@@ -1,5 +1,6 @@
 package shared_backend.used_stuff.service;
 
+import static java.time.LocalDateTime.*;
 import static java.util.stream.Collectors.*;
 import static shared_backend.used_stuff.entity.board.Status.*;
 
@@ -30,37 +31,43 @@ public class CommentService extends Check {
 		}).collect(toList());
 	}
 
-	public CommentResponse createComment(Long boardId, CreateCommentRequest request) {
+	public BoardComment createComment(Long boardId, CreateCommentRequest request) {
 		Board board = boardService.findBoard(boardId);
 		checkState(board.getStatus());
 		BoardComment comment = new BoardComment(request.getWriter(), request.getPassword(), request.getContent());
 		board.addComment(comment);
 		commentRepository.save(comment);
 
-		return new CommentResponse(boardId, comment);
+		return comment;
 	}
 
-	public CommentResponse editComment(Long commentId, UpdateCommentRequest request) {
+	public BoardComment editComment(Long commentId, UpdateCommentRequest request) {
 		BoardComment comment = commentRepository.findById(commentId).get();
 		//comment board fetch join 으로 변경하기
 		checkState(comment.getBoard().getStatus());
 		checkState(comment.getStatus());
 		checkPW(comment.getPassword(), request.getPassword());
 		comment.setContent(request.getContent());
+		comment.setUpdate_date(now());
 		comment.setStatus(edit);
 
-		return new CommentResponse(comment.getBoard().getId(), comment);
+		return comment;
 	}
 
-	public CommentResponse deleteComment(Long commentId, UpdateCommentRequest request){
+	public BoardComment deleteComment(Long commentId, UpdateCommentRequest request){
 		BoardComment comment = commentRepository.findById(commentId).get();
 		//comment board fetch join 으로 변경하기
 		checkState(comment.getBoard().getStatus());
 		checkState(comment.getStatus());
 		checkPW(comment.getPassword(), request.getPassword());
+		comment.setUpdate_date(now());
 		comment.setStatus(delete);
 
-		return new CommentResponse(comment.getBoard().getId(), comment);
+		return comment;
+	}
+
+	public BoardComment findComment(Long id) {
+		return commentRepository.findById(id).get();
 	}
 
 }

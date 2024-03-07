@@ -30,7 +30,7 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-validation'
 	implementation 'com.fasterxml.jackson.datatype:jackson-datatype-hibernate5-jakarta'
 
-	implementation 'org.springframework.boot:spring-boot-starter-security' //spring security
+//	implementation 'org.springframework.boot:spring-boot-starter-security' //spring security
 
 	runtimeOnly 'com.mysql:mysql-connector-j' //mysql 연동
 
