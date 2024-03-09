@@ -29,7 +29,7 @@ java -jar used_stuff-0.0.1-SNAPSHOT.jar
 
 ### [게시글 조회]
 * 기능 : 게시글 10개씩 조회
-   * url : [hosturl/boards](http://localhost:8080/boards)
+   * url : [hosturl/boards?page={pageNum}&search={search}](http://localhost:8080/boards)
    * input param
       * page : 현재 페이지
       * searh : 찾고 있는 게시글의 제목 or 작성자 
