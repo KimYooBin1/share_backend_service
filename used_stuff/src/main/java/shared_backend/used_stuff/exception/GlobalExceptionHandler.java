@@ -6,6 +6,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import io.jsonwebtoken.ExpiredJwtException;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
@@ -34,8 +35,12 @@ public class GlobalExceptionHandler {
 	}
 
 	@ExceptionHandler(MethodArgumentNotValidException.class)
-	public E MANV(MethodArgumentNotValidException e){
+	public E MANV(MethodArgumentNotValidException e) {
 		//실제 valid 로 받은 detail error message 출력 방법 찾아보기
 		return new E("argument error");
+	}
+	@ExceptionHandler(ExpiredJwtException.class)
+	public E EJE() {
+		return new E("login token is expired");
 	}
 }
