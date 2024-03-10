@@ -11,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import shared_backend.used_stuff.dto.JoinRequestDto;
 import shared_backend.used_stuff.entity.user.Password;
 import shared_backend.used_stuff.repository.PasswordRepository;
 
@@ -30,10 +31,10 @@ public class PasswordServiceImpl implements UserDetailsService {
 			() -> new UsernameNotFoundException(String.format("user_id=%s", username)));
 	}
 
-	public Password createPassword(String username, String pw, PasswordEncoder passwordEncoder){
+	public Password createPassword(JoinRequestDto request, PasswordEncoder passwordEncoder){
 		Password password = new Password();
-		password.setUsername(username);
-		password.setPasswordHashed(passwordEncoder.encode(pw));
+		password.setUsername(request.getUsername());
+		password.setPasswordHashed(passwordEncoder.encode(request.getPassword()));
 		password.setRole("user");
 		return password;
 	}

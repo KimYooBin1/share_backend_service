@@ -6,6 +6,7 @@ import java.util.Iterator;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.parameters.P;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import org.springframework.web.bind.annotation.GetMapping;
@@ -18,7 +19,9 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import shared_backend.used_stuff.dto.JoinRequestDto;
 import shared_backend.used_stuff.dto.JoinResponseDto;
+import shared_backend.used_stuff.entity.Address;
 import shared_backend.used_stuff.entity.user.Password;
+import shared_backend.used_stuff.entity.user.Profile;
 import shared_backend.used_stuff.entity.user.User;
 import shared_backend.used_stuff.service.BoardService;
 import shared_backend.used_stuff.service.PasswordServiceImpl;
@@ -32,19 +35,14 @@ public class UserController {
 	private final PasswordServiceImpl passwordService;
 	private final UserService userService;
 	private final PasswordEncoder passwordEncoder;
-	@PostMapping("/joinExam")
-	public String joinExam() {
-		Password password = passwordService.createPassword("username", "password", passwordEncoder);
-		return "ok";
-	}
 
 	@PostMapping("/join")
 	public JoinResponseDto join(@RequestBody @Valid JoinRequestDto request) {
-		Password password = passwordService.createPassword(request.getUsername(), request.getPassword(),
-			passwordEncoder);
-		User user = userService.createUser(password);
+		Password password = passwordService.createPassword(request, passwordEncoder);
+		Profile profile = userService.createProfile(request);
+		User user = userService.createUser(password, profile);
 
-		return new JoinResponseDto(user.getPassword().getUsername(),user.getPassword().getPassword());
+		return new JoinResponseDto(user.getPassword(), user.getProfile());
 	}
 
 

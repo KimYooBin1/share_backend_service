@@ -27,9 +27,14 @@ public class User {
 	@OneToOne(mappedBy = "user", cascade = ALL, orphanRemoval = true)
 	private Password password;
 
-	public User(Password password) {
+	@OneToOne(mappedBy = "user", cascade = ALL, orphanRemoval = true)
+	private Profile profile;
+
+	public User(Password password, Profile profile) {
 		this.type = LoginType.login;
 		this.password = password;
+		this.profile = profile;
+		profile.setUser(this);
 		password.setUser(this);
 	}
 }
