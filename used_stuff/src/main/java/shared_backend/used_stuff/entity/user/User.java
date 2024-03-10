@@ -24,6 +24,8 @@ public class User {
 	@Enumerated(STRING)
 	private LoginType type;
 
+	private int point;
+
 	@OneToOne(mappedBy = "user", cascade = ALL, orphanRemoval = true)
 	private Password password;
 
@@ -34,6 +36,7 @@ public class User {
 		this.type = LoginType.login;
 		this.password = password;
 		this.profile = profile;
+		this.point = 0;
 		profile.setUser(this);
 		password.setUser(this);
 	}

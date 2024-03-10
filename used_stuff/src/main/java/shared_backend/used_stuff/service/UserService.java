@@ -24,10 +24,8 @@ public class UserService {
 	private final PasswordServiceImpl passwordService;
 
 	public Profile createProfile(JoinRequestDto request) {
-		Profile profile = new Profile(request.getName(),request.getAge(), request.getGender() ,request.getAddress());
-		profileRepository.save(profile);
 
-		return profile;
+		return new Profile(request.getName(),request.getAge(), request.getGender() ,request.getAddress());
 	}
 
 	public User createUser(Password password, Profile profile){
