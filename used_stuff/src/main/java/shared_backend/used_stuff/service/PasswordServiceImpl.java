@@ -35,7 +35,6 @@ public class PasswordServiceImpl implements UserDetailsService {
 		password.setUsername(username);
 		password.setPasswordHashed(passwordEncoder.encode(pw));
 		password.setRole("user");
-		passwordRepository.save(password);
 		return password;
 	}
 }

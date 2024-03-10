@@ -9,6 +9,8 @@ import org.springframework.security.core.userdetails.UserDetails;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.OneToOne;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -33,9 +35,9 @@ public class Password implements UserDetails {
 		this.role = role;
 	}
 
-	// @OneToOne
-	// @JoinColumn(name = "user_id")
-	// private User user;
+	@OneToOne
+	@JoinColumn(name = "user_id")
+	private User user;
 
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
