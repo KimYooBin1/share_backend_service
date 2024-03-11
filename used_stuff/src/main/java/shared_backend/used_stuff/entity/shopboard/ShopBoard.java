@@ -33,7 +33,7 @@ public class ShopBoard {
 	private LocalDateTime createDate;
 	private LocalDateTime updateDate;
 	private LocalDateTime soldDate;
-	private int like;
+	private int likes;
 	@ManyToOne
 	@JoinColumn(name = "user_id")
 	private User user;
