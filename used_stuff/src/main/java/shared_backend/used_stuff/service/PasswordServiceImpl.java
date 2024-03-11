@@ -13,6 +13,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import shared_backend.used_stuff.dto.JoinRequestDto;
 import shared_backend.used_stuff.entity.user.Password;
+import shared_backend.used_stuff.exception.AlreadyExistId;
 import shared_backend.used_stuff.repository.PasswordRepository;
 
 @Service
@@ -33,6 +34,9 @@ public class PasswordServiceImpl implements UserDetailsService {
 
 	public Password createPassword(JoinRequestDto request, PasswordEncoder passwordEncoder){
 		Password password = new Password();
+		if(passwordRepository.existsByUsername(request.getUsername())){
+			throw new AlreadyExistId("이미 존제하는 user name 입니다");
+		}
 		password.setUsername(request.getUsername());
 		password.setPasswordHashed(passwordEncoder.encode(request.getPassword()));
 		password.setRole("user");

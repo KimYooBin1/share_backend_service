@@ -8,4 +8,6 @@ import shared_backend.used_stuff.entity.user.Password;
 
 public interface PasswordRepository extends JpaRepository<Password, String> {
 	Optional<Password> findByUsername(String username);
+
+	boolean existsByUsername(String username);
 }

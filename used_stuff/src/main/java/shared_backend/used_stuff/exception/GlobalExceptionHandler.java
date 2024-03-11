@@ -39,8 +39,13 @@ public class GlobalExceptionHandler {
 		//실제 valid 로 받은 detail error message 출력 방법 찾아보기
 		return new E("argument error");
 	}
+
 	@ExceptionHandler(ExpiredJwtException.class)
 	public E EJE() {
 		return new E("login token is expired");
 	}
+
+	@ExceptionHandler(AlreadyExistId.class)
+	public E AEI(){
+		return new E("이미 존제하는 user name 입니다");}
 }
