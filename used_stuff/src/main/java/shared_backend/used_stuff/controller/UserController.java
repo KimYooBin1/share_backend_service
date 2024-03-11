@@ -2,6 +2,7 @@ package shared_backend.used_stuff.controller;
 
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.Objects;
 
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
@@ -21,11 +22,13 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import shared_backend.used_stuff.dto.JoinRequestDto;
 import shared_backend.used_stuff.dto.JoinResponseDto;
+import shared_backend.used_stuff.dto.UpdateUserRequest;
 import shared_backend.used_stuff.dto.UserResponseDto;
 import shared_backend.used_stuff.entity.Address;
 import shared_backend.used_stuff.entity.user.Password;
 import shared_backend.used_stuff.entity.user.Profile;
 import shared_backend.used_stuff.entity.user.User;
+import shared_backend.used_stuff.exception.NotEqualPassword;
 import shared_backend.used_stuff.service.BoardService;
 import shared_backend.used_stuff.service.PasswordServiceImpl;
 import shared_backend.used_stuff.service.UserService;
@@ -67,6 +70,22 @@ public class UserController {
 		return new UserResponseDto(password, password.getUser().getProfile(), password.getUser().getPoint());
 	}
 
+	@PostMapping("/user/edit")
+	public UserResponseDto userEdit(@RequestBody @Valid UpdateUserRequest request){
+		String name = SecurityContextHolder.getContext().getAuthentication().getName();
+		Password password = (Password)passwordService.loadUserByUsername(name);
+		log.info(password.getPassword());
+		log.info(passwordEncoder.encode(request.getPassword()));
+		if(!passwordEncoder.matches(request.getPassword(), password.getPassword())){
+			throw new NotEqualPassword("비밀번호가 다름");
+		}
+		User user = password.getUser();
+		Profile profile = user.getProfile();
+
+		userService.updateUser(password, profile, request);
+
+		return new UserResponseDto(password, profile, user.getPoint());
+	}
 
 	@GetMapping("/")
 	public String checkUser() {

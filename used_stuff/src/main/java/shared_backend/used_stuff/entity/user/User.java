@@ -15,6 +15,7 @@ import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import shared_backend.used_stuff.dto.UpdateUserRequest;
 import shared_backend.used_stuff.entity.shopboard.ShopBoard;
 
 @Entity

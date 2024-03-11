@@ -2,6 +2,7 @@ package shared_backend.used_stuff.service;
 
 import java.util.Optional;
 
+import org.springframework.security.core.parameters.P;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -33,13 +34,9 @@ public class PasswordServiceImpl implements UserDetailsService {
 	}
 
 	public Password createPassword(JoinRequestDto request, PasswordEncoder passwordEncoder){
-		Password password = new Password();
 		if(passwordRepository.existsByUsername(request.getUsername())){
 			throw new AlreadyExistId("이미 존제하는 user name 입니다");
 		}
-		password.setUsername(request.getUsername());
-		password.setPasswordHashed(passwordEncoder.encode(request.getPassword()));
-		password.setRole("user");
-		return password;
+		return new Password(request.getUsername(), passwordEncoder.encode(request.getPassword()), "user");
 	}
 }

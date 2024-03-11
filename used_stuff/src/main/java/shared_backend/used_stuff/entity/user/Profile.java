@@ -16,6 +16,7 @@ import jakarta.persistence.OneToOne;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import shared_backend.used_stuff.dto.UpdateUserRequest;
 import shared_backend.used_stuff.entity.Address;
 
 @Entity
@@ -45,6 +46,14 @@ public class Profile {
 		this.gender = gender;
 		this.address = new Address(address);
 		this.createDate = now();
+		this.updateDate = now();
+	}
+
+	public void updateProfile(UpdateUserRequest request) {
+		if(request.getName() != null) this.name = request.getName();
+		if(request.getGender() != null) this.gender = request.getGender();
+		if(request.getAge() != 0) this.age = request.getAge();
+		if(request.getAddress() != null) this.address = new Address(request.getAddress());
 		this.updateDate = now();
 	}
 }

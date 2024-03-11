@@ -7,4 +7,5 @@ import shared_backend.used_stuff.entity.user.User;
 
 public interface UserRepository extends JpaRepository<User, Long> {
 	User findByPassword(Password password);
+
 }
