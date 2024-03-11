@@ -3,15 +3,19 @@ package shared_backend.used_stuff.entity.user;
 import static jakarta.persistence.CascadeType.*;
 import static jakarta.persistence.EnumType.*;
 
-import jakarta.persistence.CascadeType;
+import java.util.ArrayList;
+import java.util.List;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import shared_backend.used_stuff.entity.shopboard.ShopBoard;
 
 @Entity
 @Table(name = "users")
@@ -31,6 +35,9 @@ public class User {
 
 	@OneToOne(mappedBy = "user", cascade = ALL, orphanRemoval = true)
 	private Profile profile;
+
+	@OneToMany(mappedBy = "user", cascade = ALL, orphanRemoval = true)
+	private List<ShopBoard> boards = new ArrayList<>();
 
 	public User(Password password, Profile profile) {
 		this.type = LoginType.login;
