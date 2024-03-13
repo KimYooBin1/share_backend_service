@@ -1,11 +1,13 @@
 package shared_backend.used_stuff.entity;
 
+import static lombok.AccessLevel.*;
+
 import jakarta.persistence.Embeddable;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Embeddable
-@NoArgsConstructor
+@NoArgsConstructor(access = PROTECTED)
 @Getter
 public class Address {
 	private String zipcode;

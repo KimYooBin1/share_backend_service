@@ -3,6 +3,7 @@ package shared_backend.used_stuff.entity.user;
 import static jakarta.persistence.CascadeType.*;
 import static jakarta.persistence.EnumType.*;
 import static jakarta.persistence.FetchType.*;
+import static lombok.AccessLevel.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,12 +18,11 @@ import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import shared_backend.used_stuff.dto.UpdateUserRequest;
 import shared_backend.used_stuff.entity.shopboard.ShopBoard;
 
 @Entity
 @Table(name = "users")
-@NoArgsConstructor
+@NoArgsConstructor(access = PROTECTED)
 @Getter
 public class User {
 	@Id @GeneratedValue
