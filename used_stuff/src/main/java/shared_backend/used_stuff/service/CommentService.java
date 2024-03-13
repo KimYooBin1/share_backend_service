@@ -48,7 +48,6 @@ public class CommentService extends Check {
 		checkState(comment.getStatus());
 		checkPW(comment.getPassword(), request.getPassword());
 		comment.setContent(request.getContent());
-		comment.setUpdate_date(now());
 		comment.setStatus(edit);
 
 		return comment;
@@ -60,7 +59,6 @@ public class CommentService extends Check {
 		checkState(comment.getBoard().getStatus());
 		checkState(comment.getStatus());
 		checkPW(comment.getPassword(), request.getPassword());
-		comment.setUpdate_date(now());
 		comment.setStatus(delete);
 
 		return comment;

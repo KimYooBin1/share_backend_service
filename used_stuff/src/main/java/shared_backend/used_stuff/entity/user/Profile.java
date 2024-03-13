@@ -16,13 +16,14 @@ import jakarta.persistence.OneToOne;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import shared_backend.used_stuff.base.BaseTimeEntity;
 import shared_backend.used_stuff.dto.UpdateUserRequest;
 import shared_backend.used_stuff.entity.Address;
 
 @Entity
 @Setter @Getter
 @NoArgsConstructor
-public class Profile {
+public class Profile extends BaseTimeEntity {
 	@Id
 	@GeneratedValue
 	private Long id;
@@ -37,16 +38,12 @@ public class Profile {
 	private Gender gender;
 	@Embedded
 	private Address address;
-	private LocalDateTime createDate;
-	private LocalDateTime updateDate;
 
 	public Profile(String name, int age, Gender gender, Address address) {
 		this.name = name;
 		this.age = age;
 		this.gender = gender;
 		this.address = new Address(address);
-		this.createDate = now();
-		this.updateDate = now();
 	}
 
 	public void updateProfile(UpdateUserRequest request) {
@@ -54,6 +51,5 @@ public class Profile {
 		if(request.getGender() != null) this.gender = request.getGender();
 		if(request.getAge() != 0) this.age = request.getAge();
 		if(request.getAddress() != null) this.address = new Address(request.getAddress());
-		this.updateDate = now();
 	}
 }

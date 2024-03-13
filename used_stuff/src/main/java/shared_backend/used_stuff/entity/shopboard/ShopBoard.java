@@ -14,11 +14,12 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToOne;
+import shared_backend.used_stuff.base.BaseEntity;
 import shared_backend.used_stuff.entity.board.Status;
 import shared_backend.used_stuff.entity.user.User;
 
 @Entity
-public class ShopBoard {
+public class ShopBoard extends BaseEntity {
 	@Id @GeneratedValue
 	private Long id;
 
@@ -30,8 +31,6 @@ public class ShopBoard {
 	private Status status;
 	@Enumerated(STRING)
 	private ProductStatus productStatus;
-	private LocalDateTime createDate;
-	private LocalDateTime updateDate;
 	private LocalDateTime soldDate;
 	private int likes;
 	@ManyToOne

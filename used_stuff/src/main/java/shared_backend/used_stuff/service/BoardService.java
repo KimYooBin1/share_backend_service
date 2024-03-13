@@ -70,7 +70,6 @@ public class BoardService extends Check {
 			board.setContent(request.getContent());
 		}
 		board.setStatus(edit);
-		board.setUpdateDate(now());
 
 		return board;
 	}

@@ -14,10 +14,11 @@ import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import lombok.Getter;
 import lombok.Setter;
+import shared_backend.used_stuff.base.BaseEntity;
 
 @Entity
 @Setter @Getter
-public class Board {
+public class Board extends BaseEntity {
 	@Id @GeneratedValue
 	private Long id;
 
@@ -39,9 +40,6 @@ public class Board {
 
 	private int dislikes;
 
-	private LocalDateTime createDate;
-
-	private LocalDateTime updateDate;
 
 	//연관관계 메소드
 	public void addComment(BoardComment comment) {
@@ -68,8 +66,6 @@ public class Board {
 		this.status = Status.regist;
 		this.likes = 0;
 		this.dislikes = 0;
-		this.createDate = LocalDateTime.now();
-		this.updateDate = LocalDateTime.now();
 	}
 
 }

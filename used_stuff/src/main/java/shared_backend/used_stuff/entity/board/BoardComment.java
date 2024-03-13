@@ -16,10 +16,11 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import lombok.Getter;
 import lombok.Setter;
+import shared_backend.used_stuff.base.BaseEntity;
 
 @Entity
 @Getter @Setter
-public class BoardComment {
+public class BoardComment extends BaseEntity {
 	@Id @GeneratedValue
 	private Long id;
 
@@ -36,10 +37,6 @@ public class BoardComment {
 	@Enumerated(STRING)
 	private Status status;
 
-	private LocalDateTime create_date;
-
-	private LocalDateTime update_date;
-
 	public BoardComment() {
 	}
 
@@ -47,8 +44,6 @@ public class BoardComment {
 		this.writer = writer;
 		this.password = password;
 		this.content = content;
-		this.create_date = now();
-		this.update_date = now();
 		this.status = regist;
 	}
 }
