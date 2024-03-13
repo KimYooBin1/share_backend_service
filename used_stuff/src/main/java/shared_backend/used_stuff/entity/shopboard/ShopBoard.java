@@ -1,6 +1,7 @@
 package shared_backend.used_stuff.entity.shopboard;
 
 import static jakarta.persistence.EnumType.*;
+import static jakarta.persistence.FetchType.*;
 
 import java.time.LocalDateTime;
 
@@ -9,6 +10,7 @@ import org.springframework.cglib.core.Local;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
@@ -33,7 +35,10 @@ public class ShopBoard extends BaseEntity {
 	private ProductStatus productStatus;
 	private LocalDateTime soldDate;
 	private int likes;
-	@ManyToOne
+	@ManyToOne(fetch = LAZY)
 	@JoinColumn(name = "user_id")
 	private User user;
+
+	public ShopBoard() {
+	}
 }

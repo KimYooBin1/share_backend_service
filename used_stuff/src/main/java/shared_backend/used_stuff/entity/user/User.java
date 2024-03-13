@@ -2,12 +2,14 @@ package shared_backend.used_stuff.entity.user;
 
 import static jakarta.persistence.CascadeType.*;
 import static jakarta.persistence.EnumType.*;
+import static jakarta.persistence.FetchType.*;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.Enumerated;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
@@ -31,10 +33,10 @@ public class User {
 
 	private int point;
 
-	@OneToOne(mappedBy = "user", cascade = ALL, orphanRemoval = true)
+	@OneToOne(fetch = LAZY, mappedBy = "user", cascade = ALL, orphanRemoval = true)
 	private Password password;
 
-	@OneToOne(mappedBy = "user", cascade = ALL, orphanRemoval = true)
+	@OneToOne(fetch = LAZY, mappedBy = "user", cascade = ALL, orphanRemoval = true)
 	private Profile profile;
 
 	@OneToMany(mappedBy = "user", cascade = ALL, orphanRemoval = true)

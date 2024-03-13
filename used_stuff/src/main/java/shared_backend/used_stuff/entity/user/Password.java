@@ -1,5 +1,6 @@
 package shared_backend.used_stuff.entity.user;
 
+import static jakarta.persistence.FetchType.*;
 import static lombok.AccessLevel.*;
 
 import java.util.ArrayList;
@@ -7,7 +8,6 @@ import java.util.Collection;
 
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import jakarta.persistence.Entity;
@@ -15,10 +15,8 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToOne;
-import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import shared_backend.used_stuff.dto.UpdateUserRequest;
 
@@ -41,7 +39,7 @@ public class Password implements UserDetails {
 		this.role = role;
 	}
 
-	@OneToOne
+	@OneToOne(fetch = LAZY)
 	@JoinColumn(name = "user_id")
 	private User user;
 
