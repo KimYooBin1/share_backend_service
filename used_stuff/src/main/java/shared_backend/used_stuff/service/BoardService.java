@@ -8,7 +8,9 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Objects;
 
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -27,17 +29,8 @@ import shared_backend.used_stuff.repository.BoardRepository;
 public class BoardService extends Check {
 	private final BoardRepository boardRepository;
 
-	public List<BoardResponse> boards(int page, HttpServletResponse response) throws IOException {
-			int totalCount = boardRepository.findAll().size();
-			int all_page = ((totalCount - 1) / 10);
-			if(all_page < page){
-				page = all_page;
-				String url = "/boards?page=" + page;
-				response.sendRedirect(url);
-			}
-			PageRequest pageRequest = PageRequest.of(page, 10);
-
-			return boardRepository.findAll(pageRequest).stream().map(BoardResponse::new).collect(toList());
+	public Page<BoardResponse> boardList(Pageable pageable) {
+		return boardRepository.findAll(pageable).map(BoardResponse::new);
 	}
 
 	public List<BoardResponse> bestBoards() {

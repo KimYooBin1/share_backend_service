@@ -2,9 +2,12 @@ package shared_backend.used_stuff.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.ToString;
 import shared_backend.used_stuff.entity.board.Board;
 
 @Data
+@ToString(of = {"id", "writer"})
+
 public class BoardResponse {
 	private Long id;
 	private String writer;
