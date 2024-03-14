@@ -2,13 +2,10 @@ package shared_backend.used_stuff.controller;
 
 import java.util.Collection;
 import java.util.Iterator;
-import java.util.Objects;
 
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.parameters.P;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import org.springframework.web.bind.annotation.GetMapping;
@@ -24,12 +21,10 @@ import shared_backend.used_stuff.dto.JoinRequestDto;
 import shared_backend.used_stuff.dto.JoinResponseDto;
 import shared_backend.used_stuff.dto.UpdateUserRequest;
 import shared_backend.used_stuff.dto.UserResponseDto;
-import shared_backend.used_stuff.entity.Address;
 import shared_backend.used_stuff.entity.user.Password;
 import shared_backend.used_stuff.entity.user.Profile;
 import shared_backend.used_stuff.entity.user.User;
 import shared_backend.used_stuff.exception.NotEqualPassword;
-import shared_backend.used_stuff.service.BoardService;
 import shared_backend.used_stuff.service.PasswordServiceImpl;
 import shared_backend.used_stuff.service.UserService;
 

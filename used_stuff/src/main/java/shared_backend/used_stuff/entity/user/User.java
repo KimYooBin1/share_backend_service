@@ -10,7 +10,6 @@ import java.util.List;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.Enumerated;
-import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
@@ -41,6 +40,12 @@ public class User {
 
 	@OneToMany(mappedBy = "user", cascade = ALL, orphanRemoval = true)
 	private List<ShopBoard> boards = new ArrayList<>();
+
+	@OneToMany(mappedBy = "buyer", cascade = ALL, orphanRemoval = true)
+	private List<ShopBoard> orderBoards = new ArrayList<>();
+
+
+
 
 	public User(Password password, Profile profile) {
 		this.type = LoginType.login;
