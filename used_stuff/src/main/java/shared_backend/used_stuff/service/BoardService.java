@@ -1,10 +1,8 @@
 package shared_backend.used_stuff.service;
 
-import static java.time.LocalDateTime.*;
 import static java.util.stream.Collectors.*;
 import static shared_backend.used_stuff.entity.board.Status.*;
 
-import java.io.IOException;
 import java.util.List;
 import java.util.Objects;
 
@@ -15,7 +13,6 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import shared_backend.used_stuff.dto.BoardResponse;
 import shared_backend.used_stuff.dto.CreateBoardRequest;
@@ -32,13 +29,15 @@ public class BoardService extends Check {
 
 	public Page<BoardResponse> boardList(SearchDto search, Pageable pageable) {
 		if(Objects.equals(search.getType(), "writer")){	//작성자 검색
-			return boardRepository.findByWriterContaining(search.getSearch(), pageable).map(BoardResponse::new);
+			return boardRepository.findByWriterContainingAndStatusNot(search.getSearch(), delete, pageable)
+				.map(BoardResponse::new);
 		}
 		else if(Objects.equals(search.getType(), "title")){	//제목 감색
-			return boardRepository.findByTitleContaining(search.getSearch(), pageable).map(BoardResponse::new);
+			return boardRepository.findByTitleContainingAndStatusNot(search.getSearch(), delete, pageable)
+				.map(BoardResponse::new);
 		}
 		else{	//검색 사용x
-			return boardRepository.findAll(pageable).map(BoardResponse::new);
+			return boardRepository.findAllByStatusNot(delete, pageable).map(BoardResponse::new);
 		}
 	}
 

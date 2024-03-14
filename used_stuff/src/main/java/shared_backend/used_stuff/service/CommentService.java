@@ -1,6 +1,5 @@
 package shared_backend.used_stuff.service;
 
-import static java.time.LocalDateTime.*;
 import static java.util.stream.Collectors.*;
 import static shared_backend.used_stuff.entity.board.Status.*;
 
@@ -25,7 +24,7 @@ public class CommentService extends Check {
 	private final BoardService boardService;
 	public List<CommentResponse> comments(Long boardId) {
 		Board board = boardService.findBoard(boardId);
-		List<BoardComment> comments = commentRepository.findAllByBoard(board);
+		List<BoardComment> comments = commentRepository.findAllByBoardAndStatusNot(board, delete);
 		return comments.stream().map(comment -> {
 			return new CommentResponse(boardId, comment);
 		}).collect(toList());

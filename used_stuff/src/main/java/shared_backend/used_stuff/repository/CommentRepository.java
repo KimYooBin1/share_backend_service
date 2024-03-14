@@ -7,10 +7,12 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import shared_backend.used_stuff.entity.board.Board;
 import shared_backend.used_stuff.entity.board.BoardComment;
+import shared_backend.used_stuff.entity.board.Status;
 
 public interface CommentRepository extends JpaRepository<BoardComment, Long> {
-	public List<BoardComment> findAllByBoard(Board board);
-
+	public List<BoardComment> findAllByBoardAndStatusNot(Board board, Status status);
 	public Optional<BoardComment> findById(Long id);
+
+
 
 }
