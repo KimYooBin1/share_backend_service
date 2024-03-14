@@ -2,6 +2,7 @@ package shared_backend.used_stuff.exception;
 
 import java.util.NoSuchElementException;
 
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -46,6 +47,12 @@ public class GlobalExceptionHandler {
 	}
 
 	@ExceptionHandler(AlreadyExistId.class)
-	public E AEI(){
-		return new E("이미 존제하는 user name 입니다");}
+	public E AEI() {
+		return new E("이미 존제하는 user name 입니다");
+	}
+
+	@ExceptionHandler(AccessDeniedException.class)
+	public E ACDE() {
+		return new E("권한이 없습니다");
+	}
 }

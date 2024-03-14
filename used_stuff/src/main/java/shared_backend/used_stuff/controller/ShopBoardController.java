@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import jakarta.validation.Valid;
@@ -28,15 +29,16 @@ public class ShopBoardController {
 	private final ShopBoardService shopBoardService;
 
 	@GetMapping("/shops")
-	public Page<ShopBoardResponse> shopBoards(@PageableDefault(size = 10) Pageable pageable){	//search 검색 추가
-		return shopBoardService.shopBoardList(pageable);
+	public Page<ShopBoardResponse> shopBoards(@PageableDefault(size = 10) Pageable pageable,
+			@RequestParam(value = "type", required = false) String type,
+			@RequestParam(value = "search", required = false) String search){	//search 검색 추가
+		return shopBoardService.shopBoardList(pageable, type, search);
 	}
 
 	@GetMapping("/shops/{shop_id}/detail")
 	public ShopBoardResponse detailShopBoard(@PathVariable("shop_id") Long id){
 		//출력 어떻게 할지
 		return new ShopBoardResponse(shopBoardService.findShopBoard(id).getId());
-
 	}
 
 	@PostMapping("/shops/create")
@@ -58,13 +60,14 @@ public class ShopBoardController {
 		return shopBoard.getId();
 	}
 
+	//구매하면 판매자에게 돈들어가고 구매자 돈나가고
 	@PostMapping("/shops/{shop_id}/purchase")
 	public Long purchaseShopBoard(@PathVariable("shop_id") Long id) {
 		ShopBoard shopBoard = shopBoardService.orderShopBoard(id, "purchase");
 
 		return shopBoard.getId();
 	}
-
+	//취소하면 판매자 돈 줄이고 구매자 돈 돌려주고
 	@PostMapping("/shops/{shop_id}/cancel")
 	public Long cancelShopBoard(@PathVariable("shop_id") Long id) {
 		ShopBoard shopBoard = shopBoardService.orderShopBoard(id, "cancel");

@@ -1,9 +1,13 @@
 package shared_backend.used_stuff.service;
 
+import static shared_backend.used_stuff.entity.board.Status.*;
+import static shared_backend.used_stuff.entity.shopboard.ProductStatus.*;
+
 import java.util.Objects;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -13,6 +17,7 @@ import shared_backend.used_stuff.dto.ShopBoardResponse;
 import shared_backend.used_stuff.entity.board.Status;
 import shared_backend.used_stuff.entity.shopboard.ShopBoard;
 import shared_backend.used_stuff.entity.user.User;
+import shared_backend.used_stuff.exception.AlreadyDeletedException;
 import shared_backend.used_stuff.repository.ShopBoardRepository;
 
 @Service
@@ -22,12 +27,38 @@ public class ShopBoardService {
 	private final ShopBoardRepository shopBoardRepository;
 	private final PasswordServiceImpl passwordService;
 
-	public Page<ShopBoardResponse> shopBoardList(Pageable pageable){
-		return shopBoardRepository.findAll(pageable).map(shop -> new ShopBoardResponse(shop.getId()));
+	//검색, type, sold, sell
+	public Page<ShopBoardResponse> shopBoardList(Pageable pageable, String type, String search){
+		if(search==null){
+			if(Objects.equals(type, "sold")){
+				return shopBoardRepository.findAllByProductStatus(sold, pageable).map(s -> new ShopBoardResponse(s.getId()));
+			}
+			else if(Objects.equals(type, "sell")){
+				return shopBoardRepository.findAllByProductStatus(sell, pageable).map(s -> new ShopBoardResponse(s.getId()));
+			}
+			else{
+				return shopBoardRepository.findAll(pageable).map(shop -> new ShopBoardResponse(shop.getId()));
+			}
+		}
+		else{
+			if(Objects.equals(type, "sold")){
+				return shopBoardRepository.findAllByTitleContainingAndProductStatus(search, sold, pageable).map(s -> new ShopBoardResponse(s.getId()));
+			}
+			else if(Objects.equals(type, "sell")){
+				return shopBoardRepository.findAllByTitleContainingAndProductStatus(search, sell, pageable).map(s -> new ShopBoardResponse(s.getId()));
+			}
+			else{
+				return shopBoardRepository.findAllByTitleContaining(search, pageable).map(shop -> new ShopBoardResponse(shop.getId()));
+			}
+		}
 	}
 
 	public ShopBoard findShopBoard(Long id) {
-		return shopBoardRepository.findById(id).get();
+		ShopBoard findBoard = shopBoardRepository.findById(id).get();
+		if(findBoard.getStatus() == delete){
+			throw new AlreadyDeletedException("이미 삭제된 게시글입니다");
+		}
+		return findBoard;
 	}
 
 	public ShopBoard createShopBoard(CreateShopBoardRequest request){
@@ -41,20 +72,36 @@ public class ShopBoardService {
 	public ShopBoard updateShopBoard(Long id, Status status){
 		User user = passwordService.findUser();
 		ShopBoard findBoard = shopBoardRepository.findById(id).get();
-		if(!Objects.equals(user.getId(), findBoard.getUser().getId())){
-			throw new RuntimeException("권한이 없습니다");
+		if(findBoard.getStatus() == delete){
+			throw new AlreadyDeletedException("이미 삭제된 게시글입니다");
 		}
-		//이미 삭제된 board 에 대해 추가적인 처리 필요
+		if(!Objects.equals(user.getId(), findBoard.getUser().getId())){
+			throw new AccessDeniedException("권한이 없습니다");
+		}
 		findBoard.setStatus(status);
 		return findBoard;
 	}
 	public ShopBoard orderShopBoard(Long id, String type){
 		ShopBoard findBoard = shopBoardRepository.findById(id).get();
+
+		if(findBoard.getStatus() == delete){
+			throw new AlreadyDeletedException("이미 삭제된 게시글입니다");
+		}
 		User user = passwordService.findUser();
+
 		if(Objects.equals(type, "purchase")){
+			if(findBoard.getProductStatus() == sold){	//추가적인 exception 추가하기
+				throw new AlreadyDeletedException("이미 판매된 게시글입니다");
+			}
+			if(findBoard.getUser() == user){
+				throw new AlreadyDeletedException("본인 상품 입니다");
+			}
 			findBoard.purchase(user);
 		}
 		else{
+			if(findBoard.getBuyer() != user){	//추가 exception 필요
+				throw new AlreadyDeletedException("구매자가 일치하지 않습니다");
+			}
 			findBoard.cancel(user);
 		}
 		return findBoard;
