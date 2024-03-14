@@ -10,4 +10,7 @@ import shared_backend.used_stuff.dto.BoardResponse;
 import shared_backend.used_stuff.entity.board.Board;
 
 public interface BoardRepository extends JpaRepository<Board, Long> {
+	Page<Board> findByTitleContaining(String title, Pageable pageable);
+
+	Page<Board> findByWriterContaining(String writer, Pageable pageable);
 }

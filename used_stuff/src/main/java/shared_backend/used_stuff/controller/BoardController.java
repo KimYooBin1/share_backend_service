@@ -20,8 +20,10 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import shared_backend.used_stuff.dto.CreateBoardRequest;
 import shared_backend.used_stuff.dto.BoardResponse;
+import shared_backend.used_stuff.dto.SearchDto;
 import shared_backend.used_stuff.dto.UpdateBoardRequest;
 import shared_backend.used_stuff.entity.board.Board;
 import shared_backend.used_stuff.repository.BoardRepository;
@@ -30,13 +32,16 @@ import shared_backend.used_stuff.service.BoardService;
 @RestController
 @RequiredArgsConstructor
 @Transactional
+@Slf4j
 public class BoardController {
 	private final BoardService boardService;
 
 	@GetMapping("/boards")
-	public Page<BoardResponse> boards(@PageableDefault(size=10) Pageable pageable){
+	public Page<BoardResponse> boards(@PageableDefault(size=10) Pageable pageable,
+		@RequestParam(value = "type", required = false) String type,
+		@RequestParam(value = "search", required = false) String search){
 
-		return boardService.boardList(pageable);
+		return boardService.boardList(new SearchDto(type, search), pageable);
 	}
 
 	@GetMapping("/boards/best")

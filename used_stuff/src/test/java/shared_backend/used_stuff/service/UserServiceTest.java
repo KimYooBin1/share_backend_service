@@ -25,7 +25,7 @@ class UserServiceTest {
 
 	@Test
 	void profile생성(){
-		Profile profile = new Profile("name", 10, Gender.male, new Address());
+		Profile profile = new Profile("name", 10, Gender.male, new Address("","",""));
 		Profile save = profileRepository.save(profile);
 
 		em.flush();

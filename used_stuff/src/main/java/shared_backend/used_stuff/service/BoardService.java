@@ -19,6 +19,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import shared_backend.used_stuff.dto.BoardResponse;
 import shared_backend.used_stuff.dto.CreateBoardRequest;
+import shared_backend.used_stuff.dto.SearchDto;
 import shared_backend.used_stuff.dto.UpdateBoardRequest;
 import shared_backend.used_stuff.entity.board.Board;
 import shared_backend.used_stuff.repository.BoardRepository;
@@ -29,8 +30,16 @@ import shared_backend.used_stuff.repository.BoardRepository;
 public class BoardService extends Check {
 	private final BoardRepository boardRepository;
 
-	public Page<BoardResponse> boardList(Pageable pageable) {
-		return boardRepository.findAll(pageable).map(BoardResponse::new);
+	public Page<BoardResponse> boardList(SearchDto search, Pageable pageable) {
+		if(Objects.equals(search.getType(), "writer")){	//작성자 검색
+			return boardRepository.findByWriterContaining(search.getSearch(), pageable).map(BoardResponse::new);
+		}
+		else if(Objects.equals(search.getType(), "title")){	//제목 감색
+			return boardRepository.findByTitleContaining(search.getSearch(), pageable).map(BoardResponse::new);
+		}
+		else{	//검색 사용x
+			return boardRepository.findAll(pageable).map(BoardResponse::new);
+		}
 	}
 
 	public List<BoardResponse> bestBoards() {
