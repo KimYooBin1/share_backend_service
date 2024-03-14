@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
+import jakarta.persistence.EntityManager;
 import shared_backend.used_stuff.dto.CreateBoardRequest;
 import shared_backend.used_stuff.dto.UpdateBoardRequest;
 import shared_backend.used_stuff.entity.board.Board;
@@ -21,11 +22,14 @@ import shared_backend.used_stuff.exception.NotEqualPassword;
 @Transactional
 class BoardServiceTest {
 	@Autowired BoardService boardService;
+	@Autowired EntityManager em;
 
 	@Test
 	@DisplayName("게시글 생성")
 	void 게시글_생성(){
 		Board board = createBoard();
+		em.flush();
+		em.clear();
 
 		Board findBoard = boardService.findBoard(board.getId());
 
@@ -42,6 +46,8 @@ class BoardServiceTest {
 	void 게시글_수정(){
 		Board board = createBoard();
 		Board editBoard = updateBoard(board,"password");
+		em.flush();
+		em.clear();
 		assertEquals(editBoard.getContent(), "contents");
 		assertThat(editBoard.getStatus()).isEqualTo(Status.edit);
 	}
@@ -94,8 +100,7 @@ class BoardServiceTest {
 
 	private Board createBoard() {
 		CreateBoardRequest request = new CreateBoardRequest("writer", "password", "title", "content");
-		Board board = boardService.createBoard(request);
-		return board;
+		return boardService.createBoard(request);
 	}
 
 	private Board updateBoard(Board board, String password){
