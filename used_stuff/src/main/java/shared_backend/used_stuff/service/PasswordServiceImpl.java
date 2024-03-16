@@ -43,6 +43,7 @@ public class PasswordServiceImpl implements UserDetailsService {
 
 	public User findUser() {
 		String name = SecurityContextHolder.getContext().getAuthentication().getName();
+		log.info("name = {}", name);
 		Password password = (Password)loadUserByUsername(name);
 		return password.getUser();
 	}

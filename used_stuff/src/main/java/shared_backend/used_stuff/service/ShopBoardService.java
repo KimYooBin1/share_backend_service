@@ -70,6 +70,7 @@ public class ShopBoardService {
 	}
 
 	public ShopBoard updateShopBoard(Long id, Status status){
+		//update시 데이터 변경 확인에 관해 testcode 추가 작성
 		User user = passwordService.findUser();
 		ShopBoard findBoard = shopBoardRepository.findById(id).get();
 		if(findBoard.getStatus() == delete){
