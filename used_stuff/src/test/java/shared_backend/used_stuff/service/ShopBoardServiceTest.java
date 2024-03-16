@@ -206,26 +206,19 @@ class ShopBoardServiceTest {
 	private ShopBoard createBoard() {
 		CreateShopBoardRequest request = new CreateShopBoardRequest("title", "content", "url", 1000,
 			new Address("zipecode", "address", "addressDetail"));
-		ShopBoard shopBoard = shopBoardService.createShopBoard(request);
 
-		em.persist(shopBoard);
-		return shopBoard;
+		return shopBoardService.createShopBoard(request);
 	}
 
 	private User createUser() {
 		Password password = new Password("user", "password", "user");
 		Profile profile = new Profile("name", 10, female, new Address("zipcode", "address", "addressDetail"));
-		User user = new User(password, profile);
-		em.persist(user);
 
-		return user;
+		return userService.createUser(password, profile);
 	}
 	private User createUser(String username) {
 		Password password = new Password(username, "password", "user");
 		Profile profile = new Profile("name", 10, female, new Address("zipcode", "address", "addressDetail"));
-		User user = new User(password, profile);
-		em.persist(user);
-
-		return user;
+		return userService.createUser(password, profile);
 	}
 }
