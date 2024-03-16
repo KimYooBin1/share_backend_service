@@ -25,7 +25,7 @@ import lombok.Setter;
 import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
 import shared_backend.used_stuff.base.BaseEntity;
-import shared_backend.used_stuff.dto.CreateShopBoardRequest;
+import shared_backend.used_stuff.dto.ShopBoardRequest;
 import shared_backend.used_stuff.entity.Address;
 import shared_backend.used_stuff.entity.board.Status;
 import shared_backend.used_stuff.entity.user.User;
@@ -34,7 +34,6 @@ import shared_backend.used_stuff.entity.user.User;
 @NoArgsConstructor(access = PROTECTED)
 @ToString(of = {"id"})
 @Getter
-@Setter
 @Slf4j
 @NamedEntityGraphs({
 	@NamedEntityGraph(
@@ -80,7 +79,7 @@ public class ShopBoard extends BaseEntity {
 	@JoinColumn(name = "buyer_id")
 	private User buyer;
 
-	public ShopBoard(CreateShopBoardRequest request, User user) {
+	public ShopBoard(ShopBoardRequest request, User user) {
 		this.title = request.getTitle();
 		this.content = request.getContent();
 		this.url = request.getUrl();
@@ -94,16 +93,50 @@ public class ShopBoard extends BaseEntity {
 		user.getBoards().add(this);
 	}
 
+	public void updateShopBoard(ShopBoardRequest request) {
+		if(request.getTitle() != null){
+			this.title = request.getTitle();
+		}
+		if(request.getContent() != null){
+			this.content = request.getContent();
+		}
+		if(request.getUrl() != null){
+			this.url = request.getUrl();
+		}
+		if(request.getPrice() != 0){
+			this.price = request.getPrice();
+		}
+		if(request.getAddress() != null){
+			this.address = request.getAddress();
+		}
+	}
+
+	public void statusChange(Status status){
+		this.status = status;
+	}
+
 	public void purchase(User user) {
 		this.buyer = user;
 		this.soldDate = now();
 		this.productStatus = sold;
+		user.changePoint(-this.price);
+		this.user.changePoint(this.price);
 		user.getOrderBoards().add(this);
 	}
 
 	public void cancel(User user) {
 		this.buyer = null;
 		this.soldDate = null;
+		user.changePoint(this.price);
+		this.user.changePoint(-this.price);
 		this.productStatus = sell;
+	}
+
+	public void testUserChange(User user) {
+		this.user = user;
+	}
+
+	public void testBuyerChange(User user) {
+		this.buyer = user;
 	}
 }

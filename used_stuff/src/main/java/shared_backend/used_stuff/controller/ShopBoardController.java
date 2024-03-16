@@ -5,7 +5,6 @@ import static shared_backend.used_stuff.entity.board.Status.*;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -16,7 +15,9 @@ import org.springframework.web.bind.annotation.RestController;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import shared_backend.used_stuff.dto.CreateShopBoardRequest;
+import shared_backend.used_stuff.dto.ShopBoardRequest;
+import shared_backend.used_stuff.dto.IdResponse;
+import shared_backend.used_stuff.dto.ShopBoardDetailResponse;
 import shared_backend.used_stuff.dto.ShopBoardResponse;
 import shared_backend.used_stuff.entity.shopboard.ShopBoard;
 import shared_backend.used_stuff.service.ShopBoardService;
@@ -34,43 +35,33 @@ public class ShopBoardController {
 		return shopBoardService.shopBoardList(pageable, type, search);
 	}
 
-	// @GetMapping("/shops/{shop_id}/detail")
-	// public ShopBoardResponse detailShopBoard(@PathVariable("shop_id") Long id){
-	// 	//출력 어떻게 할지
-	// 	return new ShopBoardResponse(shopBoardService.findShopBoard(id).getId());
-	// }
+	@GetMapping("/shops/{shop_id}/detail")
+	public ShopBoardDetailResponse detailShopBoard(@PathVariable("shop_id") Long id){
+		return new ShopBoardDetailResponse(shopBoardService.findShopBoard(id));
+	}
 
 	@PostMapping("/shops/create")
-	public Long createShopBoard(@RequestBody @Valid CreateShopBoardRequest request) {
-		ShopBoard shopBoard = shopBoardService.createShopBoard(request);
-
-		return shopBoard.getId();
+	public IdResponse createShopBoard(@RequestBody @Valid ShopBoardRequest request) {
+		return new IdResponse(shopBoardService.createShopBoard(request).getId());
 	}
 
 	@PostMapping("/shops/{shop_id}/edit")
-	public Long editShopBoard(@PathVariable("shop_id") Long id) {
-		ShopBoard shopBoard = shopBoardService.updateShopBoard(id, edit);
-		return shopBoard.getId();
+	public IdResponse editShopBoard(@PathVariable("shop_id") Long id, @RequestBody @Valid ShopBoardRequest request) {
+		return new IdResponse(shopBoardService.updateShopBoard(id, edit, request).getId());
 	}
 
 	@PostMapping("/shops/{shop_id}/delete")
-	public Long deleteShopBoard(@PathVariable("shop_id") Long id) {
-		ShopBoard shopBoard = shopBoardService.updateShopBoard(id, delete);
-		return shopBoard.getId();
+	public IdResponse deleteShopBoard(@PathVariable("shop_id") Long id) {
+		return new IdResponse(shopBoardService.deleteShopBoard(id, delete).getId());
 	}
 
-	//구매하면 판매자에게 돈들어가고 구매자 돈나가고
 	@PostMapping("/shops/{shop_id}/purchase")
-	public Long purchaseShopBoard(@PathVariable("shop_id") Long id) {
-		ShopBoard shopBoard = shopBoardService.orderShopBoard(id, "purchase");
-
-		return shopBoard.getId();
+	public IdResponse purchaseShopBoard(@PathVariable("shop_id") Long id) {
+		return new IdResponse(shopBoardService.orderShopBoard(id, "purchase").getId());
 	}
-	//취소하면 판매자 돈 줄이고 구매자 돈 돌려주고
-	@PostMapping("/shops/{shop_id}/cancel")
-	public Long cancelShopBoard(@PathVariable("shop_id") Long id) {
-		ShopBoard shopBoard = shopBoardService.orderShopBoard(id, "cancel");
 
-		return shopBoard.getId();
+	@PostMapping("/shops/{shop_id}/cancel")
+	public IdResponse cancelShopBoard(@PathVariable("shop_id") Long id) {
+		return new IdResponse(shopBoardService.orderShopBoard(id, "cancel").getId());
 	}
 }

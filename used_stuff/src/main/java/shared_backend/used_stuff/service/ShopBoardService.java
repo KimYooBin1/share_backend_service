@@ -12,7 +12,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import lombok.RequiredArgsConstructor;
-import shared_backend.used_stuff.dto.CreateShopBoardRequest;
+import shared_backend.used_stuff.dto.ShopBoardRequest;
 import shared_backend.used_stuff.dto.ShopBoardResponse;
 import shared_backend.used_stuff.entity.board.Status;
 import shared_backend.used_stuff.entity.shopboard.ShopBoard;
@@ -69,7 +69,7 @@ public class ShopBoardService {
 		return findBoard;
 	}
 	@Transactional
-	public ShopBoard createShopBoard(CreateShopBoardRequest request){
+	public ShopBoard createShopBoard(ShopBoardRequest request){
 		User user = passwordService.findUser();
 		//현재 user 만 뽑아오고 싶지만 실제로는 user 연관 entity를 모두 조회하기 때문에 성능이 떨어진다. 수정 필요
 		ShopBoard shopBoard = new ShopBoard(request, user);
@@ -77,19 +77,18 @@ public class ShopBoardService {
 		return shopBoard;
 	}
 	@Transactional
-	public ShopBoard updateShopBoard(Long id, Status status){
+	public ShopBoard updateShopBoard(Long id, Status status, ShopBoardRequest request){
 		//update시 데이터 변경 확인에 관해 testcode 추가 작성
-		User user = passwordService.findUser();
-		ShopBoard findBoard = shopBoardRepository.findById(id).get();
-		if(findBoard.getStatus() == delete){
-			throw new AlreadyDeletedException("이미 삭제된 게시글입니다");
-		}
-		if(!Objects.equals(user.getId(), findBoard.getUser().getId())){
-			throw new AccessDeniedException("권한이 없습니다");
-		}
-		findBoard.setStatus(status);
+		ShopBoard findBoard = checkStatusAndAccess(id, status);
+		findBoard.updateShopBoard(request);
 		return findBoard;
 	}
+
+	@Transactional
+	public ShopBoard deleteShopBoard(Long id, Status status) {
+		return checkStatusAndAccess(id, status);
+	}
+
 	@Transactional
 	public ShopBoard orderShopBoard(Long id, String type){
 		ShopBoard findBoard = shopBoardRepository.findById(id).get();
@@ -101,19 +100,39 @@ public class ShopBoardService {
 
 		if(Objects.equals(type, "purchase")){
 			if(findBoard.getProductStatus() == sold){	//추가적인 exception 추가하기
-				throw new AlreadyDeletedException("이미 판매된 게시글입니다");
+				throw new RuntimeException("이미 판매된 게시글입니다");
 			}
 			if(findBoard.getUser() == user){
-				throw new AlreadyDeletedException("본인 상품 입니다");
+				throw new RuntimeException("본인 상품 입니다");
+			}
+			if(user.getPoint() < findBoard.getPrice()){
+				throw new RuntimeException("포인트가 부족합니다");
 			}
 			findBoard.purchase(user);
 		}
 		else{
 			if(findBoard.getBuyer() != user){	//추가 exception 필요
-				throw new AlreadyDeletedException("구매자가 일치하지 않습니다");
+				throw new RuntimeException("구매자가 일치하지 않습니다");
+			}
+			if(findBoard.getUser().getPoint() < findBoard.getPrice()){
+				throw new RuntimeException("환불 금액이 부족합니다");
 			}
 			findBoard.cancel(user);
 		}
 		return findBoard;
 	}
+
+	private ShopBoard checkStatusAndAccess(Long id, Status status) {
+		User user = passwordService.findUser();
+		ShopBoard findBoard = shopBoardRepository.findById(id).get();
+		if(findBoard.getStatus() == delete){
+			throw new AlreadyDeletedException("이미 삭제된 게시글입니다");
+		}
+		if(!Objects.equals(user.getId(), findBoard.getUser().getId())){
+			throw new AccessDeniedException("권한이 없습니다");
+		}
+		findBoard.statusChange(status);
+		return findBoard;
+	}
+
 }

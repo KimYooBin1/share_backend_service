@@ -55,4 +55,8 @@ public class User {
 		profile.setUser(this);
 		password.setUser(this);
 	}
+
+	public void changePoint(int price) {
+		this.point += price;
+	}
 }

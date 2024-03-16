@@ -1,5 +1,7 @@
 package shared_backend.used_stuff.repository;
 
+import java.util.Optional;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.EntityGraph;
@@ -20,5 +22,6 @@ public interface ShopBoardRepository extends JpaRepository<ShopBoard, Long> {
 	@EntityGraph("shopBoard-with-user-and-profile")
 	Page<ShopBoard> findAll(Pageable pageable);
 
-
+	@EntityGraph("shopBoard-with-user-and-profile")
+	Optional<ShopBoard> findById(Long id);
 }

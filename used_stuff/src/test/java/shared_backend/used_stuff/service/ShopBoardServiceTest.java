@@ -17,7 +17,7 @@ import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.transaction.annotation.Transactional;
 
 import jakarta.persistence.EntityManager;
-import shared_backend.used_stuff.dto.CreateShopBoardRequest;
+import shared_backend.used_stuff.dto.ShopBoardRequest;
 import shared_backend.used_stuff.dto.ShopBoardResponse;
 import shared_backend.used_stuff.entity.Address;
 import shared_backend.used_stuff.entity.shopboard.ShopBoard;
@@ -76,7 +76,9 @@ class ShopBoardServiceTest {
 		em.flush();
 		em.clear();
 		//지금은 status만 변하지만 나중에는 실제 내용이 바뀌는지에 대해 test
-		ShopBoard editBoard = shopBoardService.updateShopBoard(shopBoard.getId(), edit);
+		ShopBoardRequest request = new ShopBoardRequest("title", "content", "url", 1000,
+			new Address("zipcode", "address", "addressDetail"));
+		ShopBoard editBoard = shopBoardService.updateShopBoard(shopBoard.getId(), edit, request);
 		assertThat(editBoard.getStatus()).isEqualTo(edit);
 	}
 
@@ -88,7 +90,7 @@ class ShopBoardServiceTest {
 		ShopBoard shopBoard = createBoard();
 		em.flush();
 		em.clear();
-		ShopBoard deleteBoard = shopBoardService.updateShopBoard(shopBoard.getId(), delete);
+		ShopBoard deleteBoard = shopBoardService.deleteShopBoard(shopBoard.getId(), delete);
 		assertThat(deleteBoard.getStatus()).isEqualTo(delete);
 	}
 
@@ -100,9 +102,9 @@ class ShopBoardServiceTest {
 		ShopBoard shopBoard = createBoard();
 		em.flush();
 		em.clear();
-		ShopBoard deleteBoard = shopBoardService.updateShopBoard(shopBoard.getId(), delete);
+		ShopBoard deleteBoard = shopBoardService.deleteShopBoard(shopBoard.getId(), delete);
 		assertThrows(AlreadyDeletedException.class, ()->shopBoardService.findShopBoard(deleteBoard.getId()));
-		assertThrows(AlreadyDeletedException.class, ()->shopBoardService.updateShopBoard(deleteBoard.getId(), delete));
+		assertThrows(AlreadyDeletedException.class, ()->shopBoardService.deleteShopBoard(deleteBoard.getId(), delete));
 	}
 
 	@Test
@@ -112,12 +114,13 @@ class ShopBoardServiceTest {
 		createUser();
 		User user = createUser("user2");
 		ShopBoard board = createBoard();
-		board.setUser(user);
+		board.testUserChange(user);
 		em.flush();
 		em.clear();
-
-		assertThrows(AccessDeniedException.class, ()->shopBoardService.updateShopBoard(board.getId(), delete));
-		assertThrows(AccessDeniedException.class, ()->shopBoardService.updateShopBoard(board.getId(), edit));
+		ShopBoardRequest request = new ShopBoardRequest("title", "content", "url", 1000,
+			new Address("zipcode", "address", "addressDetail"));
+		assertThrows(AccessDeniedException.class, ()->shopBoardService.deleteShopBoard(board.getId(), delete));
+		assertThrows(AccessDeniedException.class, ()->shopBoardService.updateShopBoard(board.getId(), edit, request));
 	}
 
 	@Test
@@ -127,7 +130,7 @@ class ShopBoardServiceTest {
 		createUser();
 		User user = createUser("user2");
 		ShopBoard board = createBoard();
-		board.setUser(user);
+		board.testUserChange(user);
 		em.flush();
 		em.clear();
 
@@ -144,7 +147,7 @@ class ShopBoardServiceTest {
 		ShopBoard board = createBoard();
 		em.flush();
 		em.clear();
-		assertThrows(AlreadyDeletedException.class, () ->
+		assertThrows(RuntimeException.class, () ->
 			shopBoardService.orderShopBoard(board.getId(), "purchase")
 		);
 	}
@@ -156,7 +159,7 @@ class ShopBoardServiceTest {
 		createUser();
 		User user = createUser("user2");
 		ShopBoard board = createBoard();
-		board.setUser(user);
+		board.testUserChange(user);
 		em.flush();
 		em.clear();
 
@@ -173,7 +176,7 @@ class ShopBoardServiceTest {
 		createUser();
 		User user = createUser("user2");
 		ShopBoard board = createBoard();
-		board.setUser(user);
+		board.testUserChange(user);
 		em.flush();
 		em.clear();
 
@@ -193,18 +196,18 @@ class ShopBoardServiceTest {
 		createUser();
 		User user = createUser("user2");
 		ShopBoard board = createBoard();
-		board.setBuyer(user);
+		board.testBuyerChange(user);
 		em.flush();
 		em.clear();
 
-		assertThrows(AlreadyDeletedException.class, () ->
+		assertThrows(RuntimeException.class, () ->
 			shopBoardService.orderShopBoard(board.getId(), "cancel")
 		);
 	}
 
 
 	private ShopBoard createBoard() {
-		CreateShopBoardRequest request = new CreateShopBoardRequest("title", "content", "url", 1000,
+		ShopBoardRequest request = new ShopBoardRequest("title", "content", "url", 1000,
 			new Address("zipecode", "address", "addressDetail"));
 
 		return shopBoardService.createShopBoard(request);
