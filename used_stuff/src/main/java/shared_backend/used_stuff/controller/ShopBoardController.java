@@ -19,6 +19,7 @@ import shared_backend.used_stuff.dto.ShopBoardRequest;
 import shared_backend.used_stuff.dto.IdResponse;
 import shared_backend.used_stuff.dto.ShopBoardDetailResponse;
 import shared_backend.used_stuff.dto.ShopBoardResponse;
+import shared_backend.used_stuff.dto.UpdateShopBoardRequest;
 import shared_backend.used_stuff.entity.shopboard.ShopBoard;
 import shared_backend.used_stuff.service.ShopBoardService;
 
@@ -46,7 +47,7 @@ public class ShopBoardController {
 	}
 
 	@PostMapping("/shops/{shop_id}/edit")
-	public IdResponse editShopBoard(@PathVariable("shop_id") Long id, @RequestBody @Valid ShopBoardRequest request) {
+	public IdResponse editShopBoard(@PathVariable("shop_id") Long id, @RequestBody @Valid UpdateShopBoardRequest request) {
 		return new IdResponse(shopBoardService.updateShopBoard(id, edit, request).getId());
 	}
 

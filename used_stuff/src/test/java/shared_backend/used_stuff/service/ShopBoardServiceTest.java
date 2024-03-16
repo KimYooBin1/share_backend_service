@@ -19,6 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 import jakarta.persistence.EntityManager;
 import shared_backend.used_stuff.dto.ShopBoardRequest;
 import shared_backend.used_stuff.dto.ShopBoardResponse;
+import shared_backend.used_stuff.dto.UpdateShopBoardRequest;
 import shared_backend.used_stuff.entity.Address;
 import shared_backend.used_stuff.entity.shopboard.ShopBoard;
 import shared_backend.used_stuff.entity.user.Password;
@@ -76,7 +77,7 @@ class ShopBoardServiceTest {
 		em.flush();
 		em.clear();
 		//지금은 status만 변하지만 나중에는 실제 내용이 바뀌는지에 대해 test
-		ShopBoardRequest request = new ShopBoardRequest("title", "content", "url", 1000,
+		UpdateShopBoardRequest request = new UpdateShopBoardRequest("title", "content", "url", 1000,
 			new Address("zipcode", "address", "addressDetail"));
 		ShopBoard editBoard = shopBoardService.updateShopBoard(shopBoard.getId(), edit, request);
 		assertThat(editBoard.getStatus()).isEqualTo(edit);
@@ -117,7 +118,7 @@ class ShopBoardServiceTest {
 		board.testUserChange(user);
 		em.flush();
 		em.clear();
-		ShopBoardRequest request = new ShopBoardRequest("title", "content", "url", 1000,
+		UpdateShopBoardRequest request = new UpdateShopBoardRequest("title", "content", "url", 1000,
 			new Address("zipcode", "address", "addressDetail"));
 		assertThrows(AccessDeniedException.class, ()->shopBoardService.deleteShopBoard(board.getId(), delete));
 		assertThrows(AccessDeniedException.class, ()->shopBoardService.updateShopBoard(board.getId(), edit, request));

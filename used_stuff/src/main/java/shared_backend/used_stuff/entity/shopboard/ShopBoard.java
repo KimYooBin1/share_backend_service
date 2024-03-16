@@ -26,6 +26,7 @@ import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
 import shared_backend.used_stuff.base.BaseEntity;
 import shared_backend.used_stuff.dto.ShopBoardRequest;
+import shared_backend.used_stuff.dto.UpdateShopBoardRequest;
 import shared_backend.used_stuff.entity.Address;
 import shared_backend.used_stuff.entity.board.Status;
 import shared_backend.used_stuff.entity.user.User;
@@ -93,7 +94,7 @@ public class ShopBoard extends BaseEntity {
 		user.getBoards().add(this);
 	}
 
-	public void updateShopBoard(ShopBoardRequest request) {
+	public void updateShopBoard(UpdateShopBoardRequest request) {
 		if(request.getTitle() != null){
 			this.title = request.getTitle();
 		}

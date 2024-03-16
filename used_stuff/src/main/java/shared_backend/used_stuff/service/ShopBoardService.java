@@ -14,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 import lombok.RequiredArgsConstructor;
 import shared_backend.used_stuff.dto.ShopBoardRequest;
 import shared_backend.used_stuff.dto.ShopBoardResponse;
+import shared_backend.used_stuff.dto.UpdateShopBoardRequest;
 import shared_backend.used_stuff.entity.board.Status;
 import shared_backend.used_stuff.entity.shopboard.ShopBoard;
 import shared_backend.used_stuff.entity.user.User;
@@ -77,7 +78,7 @@ public class ShopBoardService {
 		return shopBoard;
 	}
 	@Transactional
-	public ShopBoard updateShopBoard(Long id, Status status, ShopBoardRequest request){
+	public ShopBoard updateShopBoard(Long id, Status status, UpdateShopBoardRequest request){
 		//update시 데이터 변경 확인에 관해 testcode 추가 작성
 		ShopBoard findBoard = checkStatusAndAccess(id, status);
 		findBoard.updateShopBoard(request);
