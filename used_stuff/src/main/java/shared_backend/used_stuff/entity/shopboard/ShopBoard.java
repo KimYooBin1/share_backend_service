@@ -15,6 +15,10 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.NamedAttributeNode;
+import jakarta.persistence.NamedEntityGraph;
+import jakarta.persistence.NamedEntityGraphs;
+import jakarta.persistence.NamedSubgraph;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -29,10 +33,32 @@ import shared_backend.used_stuff.entity.user.User;
 @Entity
 @NoArgsConstructor(access = PROTECTED)
 @ToString(of = {"id"})
-@Getter @Setter
+@Getter
+@Setter
 @Slf4j
+@NamedEntityGraphs({
+	@NamedEntityGraph(
+		name = "shopBoard-with-user",
+		attributeNodes = {
+			@NamedAttributeNode("user"),
+		}
+	),
+	@NamedEntityGraph(
+		name = "shopBoard-with-user-and-profile",
+		attributeNodes = {
+			@NamedAttributeNode(value = "user", subgraph = "profile"),
+		},
+		subgraphs = {@NamedSubgraph(
+			name = "profile",
+			attributeNodes = {
+				@NamedAttributeNode("profile")
+			}
+		)}
+	)
+})
 public class ShopBoard extends BaseEntity {
-	@Id @GeneratedValue
+	@Id
+	@GeneratedValue
 	private Long id;
 	private String title;
 	private String content;
@@ -54,7 +80,7 @@ public class ShopBoard extends BaseEntity {
 	@JoinColumn(name = "buyer_id")
 	private User buyer;
 
-	public ShopBoard(CreateShopBoardRequest request, User user){
+	public ShopBoard(CreateShopBoardRequest request, User user) {
 		this.title = request.getTitle();
 		this.content = request.getContent();
 		this.url = request.getUrl();

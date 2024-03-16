@@ -31,24 +31,32 @@ public class ShopBoardService {
 	public Page<ShopBoardResponse> shopBoardList(Pageable pageable, String type, String search){
 		if(search==null){
 			if(Objects.equals(type, "sold")){
-				return shopBoardRepository.findAllByProductStatus(sold, pageable).map(s -> new ShopBoardResponse(s.getId()));
+				return shopBoardRepository.findAllByProductStatus(sold, pageable)
+					.map(s -> new ShopBoardResponse(s.getId(), s.getTitle(), s.getUser().getProfile().getName(),
+						s.getBuyer().getProfile().getName(), s.getProductStatus(), s.getCreateDate()));
 			}
 			else if(Objects.equals(type, "sell")){
-				return shopBoardRepository.findAllByProductStatus(sell, pageable).map(s -> new ShopBoardResponse(s.getId()));
+				return shopBoardRepository.findAllByProductStatus(sell, pageable)
+					.map(s -> new ShopBoardResponse(s.getId(), s.getTitle(), s.getUser().getProfile().getName(),
+						s.getProductStatus(), s.getCreateDate()));
 			}
 			else{
-				return shopBoardRepository.findAll(pageable).map(shop -> new ShopBoardResponse(shop.getId()));
+				return shopBoardRepository.findAll(pageable).map(s -> new ShopBoardResponse(s.getId(), s.getTitle(), s.getUser().getProfile().getName(),
+					s.getProductStatus(), s.getCreateDate()));
 			}
 		}
 		else{
 			if(Objects.equals(type, "sold")){
-				return shopBoardRepository.findAllByTitleContainingAndProductStatus(search, sold, pageable).map(s -> new ShopBoardResponse(s.getId()));
+				return shopBoardRepository.findAllByTitleContainingAndProductStatus(search, sold, pageable).map(s -> new ShopBoardResponse(s.getId(), s.getTitle(), s.getUser().getProfile().getName(),
+					s.getBuyer().getProfile().getName(), s.getProductStatus(), s.getCreateDate()));
 			}
 			else if(Objects.equals(type, "sell")){
-				return shopBoardRepository.findAllByTitleContainingAndProductStatus(search, sell, pageable).map(s -> new ShopBoardResponse(s.getId()));
+				return shopBoardRepository.findAllByTitleContainingAndProductStatus(search, sell, pageable).map(s -> new ShopBoardResponse(s.getId(), s.getTitle(), s.getUser().getProfile().getName(),
+					s.getProductStatus(), s.getCreateDate()));
 			}
 			else{
-				return shopBoardRepository.findAllByTitleContaining(search, pageable).map(shop -> new ShopBoardResponse(shop.getId()));
+				return shopBoardRepository.findAllByTitleContaining(search, pageable).map(s -> new ShopBoardResponse(s.getId(), s.getTitle(), s.getUser().getProfile().getName(),
+					s.getProductStatus(), s.getCreateDate()));
 			}
 		}
 	}

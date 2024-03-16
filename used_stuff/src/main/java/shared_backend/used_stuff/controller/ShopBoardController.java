@@ -34,11 +34,11 @@ public class ShopBoardController {
 		return shopBoardService.shopBoardList(pageable, type, search);
 	}
 
-	@GetMapping("/shops/{shop_id}/detail")
-	public ShopBoardResponse detailShopBoard(@PathVariable("shop_id") Long id){
-		//출력 어떻게 할지
-		return new ShopBoardResponse(shopBoardService.findShopBoard(id).getId());
-	}
+	// @GetMapping("/shops/{shop_id}/detail")
+	// public ShopBoardResponse detailShopBoard(@PathVariable("shop_id") Long id){
+	// 	//출력 어떻게 할지
+	// 	return new ShopBoardResponse(shopBoardService.findShopBoard(id).getId());
+	// }
 
 	@PostMapping("/shops/create")
 	public Long createShopBoard(@RequestBody @Valid CreateShopBoardRequest request) {
