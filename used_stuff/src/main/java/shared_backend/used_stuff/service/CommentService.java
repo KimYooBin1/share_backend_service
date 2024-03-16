@@ -29,7 +29,7 @@ public class CommentService extends Check {
 			return new CommentResponse(boardId, comment);
 		}).collect(toList());
 	}
-
+	@Transactional
 	public BoardComment createComment(Long boardId, CreateCommentRequest request) {
 		Board board = boardService.findBoard(boardId);
 		checkState(board.getStatus());
@@ -40,6 +40,7 @@ public class CommentService extends Check {
 		return comment;
 	}
 
+	@Transactional
 	public BoardComment editComment(Long commentId, UpdateCommentRequest request) {
 		BoardComment comment = commentRepository.findById(commentId).get();
 		//comment board fetch join 으로 변경하기
@@ -51,7 +52,7 @@ public class CommentService extends Check {
 
 		return comment;
 	}
-
+	@Transactional
 	public BoardComment deleteComment(Long commentId, UpdateCommentRequest request){
 		BoardComment comment = commentRepository.findById(commentId).get();
 		//comment board fetch join 으로 변경하기

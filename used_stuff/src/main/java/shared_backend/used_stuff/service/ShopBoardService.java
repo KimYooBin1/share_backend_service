@@ -21,7 +21,7 @@ import shared_backend.used_stuff.exception.AlreadyDeletedException;
 import shared_backend.used_stuff.repository.ShopBoardRepository;
 
 @Service
-@Transactional
+@Transactional(readOnly = true)
 @RequiredArgsConstructor
 public class ShopBoardService {
 	private final ShopBoardRepository shopBoardRepository;
@@ -60,7 +60,7 @@ public class ShopBoardService {
 		}
 		return findBoard;
 	}
-
+	@Transactional
 	public ShopBoard createShopBoard(CreateShopBoardRequest request){
 		User user = passwordService.findUser();
 		//현재 user 만 뽑아오고 싶지만 실제로는 user 연관 entity를 모두 조회하기 때문에 성능이 떨어진다. 수정 필요
@@ -68,7 +68,7 @@ public class ShopBoardService {
 		shopBoardRepository.save(shopBoard);
 		return shopBoard;
 	}
-
+	@Transactional
 	public ShopBoard updateShopBoard(Long id, Status status){
 		//update시 데이터 변경 확인에 관해 testcode 추가 작성
 		User user = passwordService.findUser();
@@ -82,6 +82,7 @@ public class ShopBoardService {
 		findBoard.setStatus(status);
 		return findBoard;
 	}
+	@Transactional
 	public ShopBoard orderShopBoard(Long id, String type){
 		ShopBoard findBoard = shopBoardRepository.findById(id).get();
 

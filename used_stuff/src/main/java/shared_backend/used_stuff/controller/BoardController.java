@@ -31,7 +31,6 @@ import shared_backend.used_stuff.service.BoardService;
 
 @RestController
 @RequiredArgsConstructor
-@Transactional
 @Slf4j
 public class BoardController {
 	private final BoardService boardService;

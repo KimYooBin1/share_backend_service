@@ -23,7 +23,6 @@ import shared_backend.used_stuff.service.ShopBoardService;
 
 @RestController
 @RequiredArgsConstructor
-@Transactional
 @Slf4j
 public class ShopBoardController {
 	private final ShopBoardService shopBoardService;

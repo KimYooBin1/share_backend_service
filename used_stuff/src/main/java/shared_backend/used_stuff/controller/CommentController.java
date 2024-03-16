@@ -19,7 +19,6 @@ import shared_backend.used_stuff.service.CommentService;
 
 @RestController
 @RequiredArgsConstructor
-@Transactional
 public class CommentController {
 	private final CommentService commentService;
 

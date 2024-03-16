@@ -17,7 +17,7 @@ import shared_backend.used_stuff.repository.UserRepository;
 
 @Service
 @Slf4j
-@Transactional
+@Transactional(readOnly = true)
 @RequiredArgsConstructor
 public class UserService {
 	private final UserRepository userRepository;
@@ -31,14 +31,14 @@ public class UserService {
 	public Profile findProfile(User user) {
 		return profileRepository.findByUser(user);
 	}
-
+	@Transactional
 	public User createUser(Password password, Profile profile){
 		User user = new User(password, profile);
 		userRepository.save(user);
 
 		return user;
 	}
-
+	@Transactional
 	public void updateUser(Password password, Profile profile, UpdateUserRequest request) {
 		profile.updateProfile(request);
 		password.updatePassword(request, encoder);

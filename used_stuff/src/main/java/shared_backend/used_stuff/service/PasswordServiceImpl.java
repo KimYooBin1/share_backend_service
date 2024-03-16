@@ -21,7 +21,7 @@ import shared_backend.used_stuff.repository.PasswordRepository;
 @Service
 @Slf4j
 @RequiredArgsConstructor
-@Transactional
+@Transactional(readOnly = true)
 public class PasswordServiceImpl implements UserDetailsService {
 
 	private final PasswordRepository passwordRepository;
@@ -34,6 +34,7 @@ public class PasswordServiceImpl implements UserDetailsService {
 			() -> new UsernameNotFoundException(String.format("user_id=%s", username)));
 	}
 
+	@Transactional
 	public Password createPassword(JoinRequestDto request, PasswordEncoder passwordEncoder){
 		if(passwordRepository.existsByUsername(request.getUsername())){
 			throw new AlreadyExistId("이미 존제하는 user name 입니다");
