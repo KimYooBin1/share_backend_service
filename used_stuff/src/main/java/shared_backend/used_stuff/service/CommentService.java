@@ -31,7 +31,7 @@ public class CommentService extends Check {
 	}
 	@Transactional
 	public BoardComment createComment(Long boardId, CreateCommentRequest request) {
-		Board board = boardService.findBoard(boardId);
+		Board board = boardService.findOnlyBoard(boardId);
 		checkState(board.getStatus());
 		BoardComment comment = new BoardComment(request.getWriter(), request.getPassword(), request.getContent());
 		board.addComment(comment);

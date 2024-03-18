@@ -1,5 +1,7 @@
 package shared_backend.used_stuff.dto.board;
 
+import java.time.LocalDateTime;
+
 import lombok.Data;
 import shared_backend.used_stuff.entity.board.BoardComment;
 import shared_backend.used_stuff.entity.board.Status;
@@ -12,6 +14,7 @@ public class CommentResponse {
 	private String password;
 	private String content;
 	private Status status;
+	private LocalDateTime createDate;
 
 	public CommentResponse(Long boardId, BoardComment comment) {
 		this.b_id = boardId;
@@ -19,6 +22,7 @@ public class CommentResponse {
 		this.writer = comment.getWriter();
 		this.password = comment.getPassword();
 		this.content = comment.getContent();
+		this.createDate = comment.getCreateDate();
 		this.status = comment.getStatus();
 	}
 }

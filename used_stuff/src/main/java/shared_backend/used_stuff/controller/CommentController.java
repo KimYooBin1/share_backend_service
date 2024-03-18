@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import shared_backend.used_stuff.dto.IdResponse;
 import shared_backend.used_stuff.dto.board.CommentResponse;
 import shared_backend.used_stuff.dto.board.CreateCommentRequest;
 import shared_backend.used_stuff.dto.UpdateCommentRequest;
@@ -38,11 +39,8 @@ public class CommentController {
 		return new CommentResponse(comment.getBoard().getId(), comment);
 	}
 
-
 	@PostMapping("/comments/{comment_id}/delete")
-	public CommentResponse deleteComment(@PathVariable("comment_id") Long commentId, @RequestBody UpdateCommentRequest request) {
-		BoardComment comment = commentService.deleteComment(commentId, request);
-		return new CommentResponse(comment.getBoard().getId(), comment);
+	public IdResponse deleteComment(@PathVariable("comment_id") Long commentId, @RequestBody UpdateCommentRequest request) {
+		return new IdResponse(commentService.deleteComment(commentId, request).getId());
 	}
-
 }

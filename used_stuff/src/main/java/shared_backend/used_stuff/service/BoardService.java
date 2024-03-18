@@ -14,7 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import lombok.RequiredArgsConstructor;
 import shared_backend.used_stuff.dto.board.CreateBoardRequest;
-import shared_backend.used_stuff.dto.SearchDto;
+import shared_backend.used_stuff.dto.board.SearchDto;
 import shared_backend.used_stuff.dto.board.UpdateBoardRequest;
 import shared_backend.used_stuff.dto.board.BoardListDto;
 import shared_backend.used_stuff.entity.board.Board;
@@ -47,7 +47,7 @@ public class BoardService extends Check {
 	}
 
 	public Board findBoard(Long id){
-		return boardRepository.findById(id).get();
+		return boardRepository.findBoardFetchComments(id, delete).get();
 	}
 
 	@Transactional
@@ -94,5 +94,9 @@ public class BoardService extends Check {
 			board.dislikeBoard();
 		}
 		return board;
+	}
+
+	public Board findOnlyBoard(Long boardId) {
+		return boardRepository.findById(boardId).get();
 	}
 }
