@@ -17,9 +17,9 @@ import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.transaction.annotation.Transactional;
 
 import jakarta.persistence.EntityManager;
-import shared_backend.used_stuff.dto.ShopBoardRequest;
-import shared_backend.used_stuff.dto.ShopBoardResponse;
-import shared_backend.used_stuff.dto.UpdateShopBoardRequest;
+import shared_backend.used_stuff.dto.shop.ShopBoardRequest;
+import shared_backend.used_stuff.dto.shop.ShopBoardResponse;
+import shared_backend.used_stuff.dto.shop.UpdateShopBoardRequest;
 import shared_backend.used_stuff.entity.Address;
 import shared_backend.used_stuff.entity.shopboard.ShopBoard;
 import shared_backend.used_stuff.entity.user.Password;

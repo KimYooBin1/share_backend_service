@@ -14,7 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 import shared_backend.used_stuff.dto.board.CreateBoardRequest;
 import shared_backend.used_stuff.dto.board.CreateCommentRequest;
 import shared_backend.used_stuff.dto.board.UpdateBoardRequest;
-import shared_backend.used_stuff.dto.UpdateCommentRequest;
+import shared_backend.used_stuff.dto.board.UpdateCommentRequest;
 import shared_backend.used_stuff.entity.board.Board;
 import shared_backend.used_stuff.entity.board.BoardComment;
 import shared_backend.used_stuff.exception.AlreadyDeletedException;

@@ -15,12 +15,11 @@ import org.springframework.web.bind.annotation.RestController;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import shared_backend.used_stuff.dto.ShopBoardRequest;
-import shared_backend.used_stuff.dto.IdResponse;
-import shared_backend.used_stuff.dto.ShopBoardDetailResponse;
-import shared_backend.used_stuff.dto.ShopBoardResponse;
-import shared_backend.used_stuff.dto.UpdateShopBoardRequest;
-import shared_backend.used_stuff.entity.shopboard.ShopBoard;
+import shared_backend.used_stuff.dto.shop.ShopBoardRequest;
+import shared_backend.used_stuff.dto.user.IdResponse;
+import shared_backend.used_stuff.dto.shop.ShopBoardDetailResponse;
+import shared_backend.used_stuff.dto.shop.ShopBoardResponse;
+import shared_backend.used_stuff.dto.shop.UpdateShopBoardRequest;
 import shared_backend.used_stuff.service.ShopBoardService;
 
 @RestController

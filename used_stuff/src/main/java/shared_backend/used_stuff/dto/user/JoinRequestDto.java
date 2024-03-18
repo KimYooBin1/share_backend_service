@@ -1,14 +1,15 @@
-package shared_backend.used_stuff.dto;
+package shared_backend.used_stuff.dto.user;
 
 import lombok.Data;
 import shared_backend.used_stuff.entity.Address;
 import shared_backend.used_stuff.entity.user.Gender;
 
 @Data
-public class UpdateUserRequest {
-	private String password;
+public class JoinRequestDto {
+	String username;
+	String password;
 	private String name;
-	private Address address;
 	private int age;
+	private Address address;
 	private Gender gender;
 }

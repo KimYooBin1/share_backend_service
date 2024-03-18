@@ -18,7 +18,7 @@ import jakarta.persistence.OneToOne;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import shared_backend.used_stuff.dto.UpdateUserRequest;
+import shared_backend.used_stuff.dto.user.UpdateUserRequest;
 
 @Entity
 @Getter @Setter

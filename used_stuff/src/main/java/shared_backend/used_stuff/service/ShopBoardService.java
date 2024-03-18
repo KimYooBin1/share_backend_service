@@ -12,9 +12,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import lombok.RequiredArgsConstructor;
-import shared_backend.used_stuff.dto.ShopBoardRequest;
-import shared_backend.used_stuff.dto.ShopBoardResponse;
-import shared_backend.used_stuff.dto.UpdateShopBoardRequest;
+import shared_backend.used_stuff.dto.shop.ShopBoardRequest;
+import shared_backend.used_stuff.dto.shop.ShopBoardResponse;
+import shared_backend.used_stuff.dto.shop.UpdateShopBoardRequest;
 import shared_backend.used_stuff.entity.board.Status;
 import shared_backend.used_stuff.entity.shopboard.ShopBoard;
 import shared_backend.used_stuff.entity.user.User;

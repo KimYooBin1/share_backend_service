@@ -2,26 +2,20 @@ package shared_backend.used_stuff.entity.user;
 
 import static jakarta.persistence.EnumType.*;
 import static jakarta.persistence.FetchType.*;
-import static java.time.LocalDateTime.*;
 import static lombok.AccessLevel.*;
-
-import java.time.LocalDateTime;
 
 import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
-import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToOne;
-import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import shared_backend.used_stuff.base.BaseTimeEntity;
-import shared_backend.used_stuff.dto.UpdateUserRequest;
+import shared_backend.used_stuff.dto.user.UpdateUserRequest;
 import shared_backend.used_stuff.entity.Address;
 
 @Entity

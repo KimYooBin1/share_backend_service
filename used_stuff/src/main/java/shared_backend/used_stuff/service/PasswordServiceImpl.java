@@ -12,7 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import shared_backend.used_stuff.dto.JoinRequestDto;
+import shared_backend.used_stuff.dto.user.JoinRequestDto;
 import shared_backend.used_stuff.entity.user.Password;
 import shared_backend.used_stuff.entity.user.User;
 import shared_backend.used_stuff.exception.AlreadyExistId;

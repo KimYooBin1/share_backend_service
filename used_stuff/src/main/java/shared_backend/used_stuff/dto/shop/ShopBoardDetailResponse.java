@@ -1,4 +1,4 @@
-package shared_backend.used_stuff.dto;
+package shared_backend.used_stuff.dto.shop;
 
 import java.time.LocalDateTime;
 

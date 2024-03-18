@@ -20,7 +20,7 @@ import lombok.extern.slf4j.Slf4j;
 import shared_backend.used_stuff.dto.board.BoardResponse;
 import shared_backend.used_stuff.dto.board.CreateBoardRequest;
 import shared_backend.used_stuff.dto.board.BoardDetailResponse;
-import shared_backend.used_stuff.dto.IdResponse;
+import shared_backend.used_stuff.dto.user.IdResponse;
 import shared_backend.used_stuff.dto.board.SearchDto;
 import shared_backend.used_stuff.dto.board.UpdateBoardRequest;
 import shared_backend.used_stuff.dto.board.BoardListDto;
