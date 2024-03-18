@@ -1,6 +1,5 @@
 package shared_backend.used_stuff.service;
 
-import static java.util.stream.Collectors.*;
 import static shared_backend.used_stuff.entity.board.Status.*;
 
 import java.util.List;
@@ -14,10 +13,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import lombok.RequiredArgsConstructor;
-import shared_backend.used_stuff.dto.BoardResponse;
-import shared_backend.used_stuff.dto.CreateBoardRequest;
+import shared_backend.used_stuff.dto.board.CreateBoardRequest;
 import shared_backend.used_stuff.dto.SearchDto;
-import shared_backend.used_stuff.dto.UpdateBoardRequest;
+import shared_backend.used_stuff.dto.board.UpdateBoardRequest;
+import shared_backend.used_stuff.dto.board.BoardListDto;
 import shared_backend.used_stuff.entity.board.Board;
 import shared_backend.used_stuff.repository.BoardRepository;
 
@@ -27,24 +26,24 @@ import shared_backend.used_stuff.repository.BoardRepository;
 public class BoardService extends Check {
 	private final BoardRepository boardRepository;
 
-	public Page<BoardResponse> boardList(SearchDto search, Pageable pageable) {
+	public Page<BoardListDto> boardList(SearchDto search, Pageable pageable) {
 		if(Objects.equals(search.getType(), "writer")){	//작성자 검색
-			return boardRepository.findByWriterContainingAndStatusNot(search.getSearch(), delete, pageable)
-				.map(BoardResponse::new);
+			return boardRepository.findByWriterContainingAndStatusNot(search.getSearch(), delete, pageable);
 		}
 		else if(Objects.equals(search.getType(), "title")){	//제목 감색
-			return boardRepository.findByTitleContainingAndStatusNot(search.getSearch(), delete, pageable)
-				.map(BoardResponse::new);
+			return boardRepository.findByTitleContainingAndStatusNot(search.getSearch(), delete, pageable);
 		}
 		else{	//검색 사용x
-			return boardRepository.findAllByStatusNot(delete, pageable).map(BoardResponse::new);
+			return boardRepository.findAllByStatusNot(delete, pageable);
 		}
 	}
 
-	public List<BoardResponse> bestBoards() {
+
+
+	public List<BoardListDto> bestBoards() {
 		PageRequest pageRequest = PageRequest.of(0, 5, Sort.by("likes").descending());
 
-		return boardRepository.findAll(pageRequest).stream().map(BoardResponse::new).collect(toList());
+		return boardRepository.findAllProjectedByLikesGreaterThan(0, pageRequest);
 	}
 
 	public Board findBoard(Long id){

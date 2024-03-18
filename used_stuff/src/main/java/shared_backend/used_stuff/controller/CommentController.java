@@ -2,7 +2,6 @@ package shared_backend.used_stuff.controller;
 
 import java.util.List;
 
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -11,8 +10,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import shared_backend.used_stuff.dto.CommentResponse;
-import shared_backend.used_stuff.dto.CreateCommentRequest;
+import shared_backend.used_stuff.dto.board.CommentResponse;
+import shared_backend.used_stuff.dto.board.CreateCommentRequest;
 import shared_backend.used_stuff.dto.UpdateCommentRequest;
 import shared_backend.used_stuff.entity.board.BoardComment;
 import shared_backend.used_stuff.service.CommentService;

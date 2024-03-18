@@ -2,13 +2,11 @@ package shared_backend.used_stuff.entity.board;
 
 import static jakarta.persistence.EnumType.*;
 import static jakarta.persistence.FetchType.*;
-import static java.time.LocalDateTime.*;
 import static shared_backend.used_stuff.entity.board.Status.*;
 
-import java.time.LocalDateTime;
+
 
 import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;

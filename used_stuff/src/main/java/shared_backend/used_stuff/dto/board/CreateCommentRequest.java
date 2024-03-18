@@ -1,4 +1,4 @@
-package shared_backend.used_stuff.dto;
+package shared_backend.used_stuff.dto.board;
 
 import org.hibernate.validator.constraints.Length;
 
@@ -6,21 +6,18 @@ import jakarta.validation.constraints.NotEmpty;
 import lombok.Data;
 
 @Data
-public class CreateBoardRequest {
+public class CreateCommentRequest {
 	@NotEmpty
 	private String writer;
 	@NotEmpty
 	@Length(min = 5, max = 10)
 	private String password;
 	@NotEmpty
-	private String title;
-	@NotEmpty
 	private String content;
 
-	public CreateBoardRequest(String writer, String password, String title, String content) {
+	public CreateCommentRequest(String writer, String password, String content) {
 		this.writer = writer;
 		this.password = password;
-		this.title = title;
 		this.content = content;
 	}
 }

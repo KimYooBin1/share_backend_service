@@ -3,9 +3,10 @@ package shared_backend.used_stuff.entity.board;
 import static jakarta.persistence.CascadeType.*;
 import static jakarta.persistence.EnumType.*;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.Enumerated;
@@ -22,6 +23,7 @@ public class Board extends BaseEntity {
 	@Id @GeneratedValue
 	private Long id;
 
+	@JsonIgnore
 	@OneToMany(mappedBy = "board", cascade = ALL, orphanRemoval = true)
 	private List<BoardComment> boardComments = new ArrayList<>();
 

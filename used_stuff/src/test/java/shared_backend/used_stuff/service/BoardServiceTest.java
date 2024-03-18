@@ -11,8 +11,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
 import jakarta.persistence.EntityManager;
-import shared_backend.used_stuff.dto.CreateBoardRequest;
-import shared_backend.used_stuff.dto.UpdateBoardRequest;
+import shared_backend.used_stuff.dto.board.CreateBoardRequest;
+import shared_backend.used_stuff.dto.board.UpdateBoardRequest;
 import shared_backend.used_stuff.entity.board.Board;
 import shared_backend.used_stuff.entity.board.Status;
 import shared_backend.used_stuff.exception.AlreadyDeletedException;

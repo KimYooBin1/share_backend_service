@@ -11,9 +11,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
-import shared_backend.used_stuff.dto.CreateBoardRequest;
-import shared_backend.used_stuff.dto.CreateCommentRequest;
-import shared_backend.used_stuff.dto.UpdateBoardRequest;
+import shared_backend.used_stuff.dto.board.CreateBoardRequest;
+import shared_backend.used_stuff.dto.board.CreateCommentRequest;
+import shared_backend.used_stuff.dto.board.UpdateBoardRequest;
 import shared_backend.used_stuff.dto.UpdateCommentRequest;
 import shared_backend.used_stuff.entity.board.Board;
 import shared_backend.used_stuff.entity.board.BoardComment;
