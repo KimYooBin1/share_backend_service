@@ -29,7 +29,7 @@ public class PasswordServiceImpl implements UserDetailsService {
 	@Override
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 		Optional<Password> findOne = passwordRepository.findByUsername(username);
-		log.info("username = {}",findOne.get().getUsername());
+
 		return findOne.orElseThrow(
 			() -> new UsernameNotFoundException(String.format("user_id=%s", username)));
 	}

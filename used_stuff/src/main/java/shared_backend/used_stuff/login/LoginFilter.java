@@ -1,6 +1,7 @@
 package shared_backend.used_stuff.login;
 
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.Collection;
 import java.util.Iterator;
 
@@ -36,15 +37,15 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
 
 		//스프링 시큐리티에서 username과 password를 검증하기 위해서는 token에 담아야 함
 		UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(username, password, null);
-		log.info("token={}", authToken);
 		//token에 담은 검증을 위한 AuthenticationManager로 전달
 		return authenticationManager.authenticate(authToken);
 	}
 
 	//로그인 성공시 실행하는 메소드 (여기서 JWT를 발급하면 됨)
 	@Override
-	protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authentication) {
-		logger.info("login success");
+	protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authentication) throws
+		IOException {
+		response.getWriter().write("login success");
 		//password
 		Password password = (Password) authentication.getPrincipal();
 
@@ -65,8 +66,7 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
 	@Override
 	protected void unsuccessfulAuthentication(HttpServletRequest request, HttpServletResponse response,
 		org.springframework.security.core.AuthenticationException failed) throws IOException, ServletException {
-		// super.unsuccessfulAuthentication(request, response, failed);
-		log.error("login fail");
+		response.getWriter().write("login fail");
 		response.setStatus(401);
 	}
 

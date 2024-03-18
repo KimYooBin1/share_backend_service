@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import shared_backend.used_stuff.dto.user.IdResponse;
 import shared_backend.used_stuff.dto.user.JoinRequestDto;
 import shared_backend.used_stuff.dto.user.JoinResponseDto;
 import shared_backend.used_stuff.dto.user.UpdateUserRequest;
@@ -38,12 +39,12 @@ public class UserController {
 	private final PasswordEncoder passwordEncoder;
 
 	@PostMapping("/join")
-	public JoinResponseDto join(@RequestBody @Valid JoinRequestDto request) {
+	public IdResponse join(@RequestBody @Valid JoinRequestDto request) {
 		Password password = passwordService.createPassword(request, passwordEncoder);
 		Profile profile = userService.createProfile(request);
 		User user = userService.createUser(password, profile);
 
-		return new JoinResponseDto(user.getPassword(), user.getProfile());
+		return new IdResponse(user.getId());
 	}
 
 	/**
@@ -66,11 +67,9 @@ public class UserController {
 	}
 
 	@PostMapping("/user/edit")
-	public UserResponseDto userEdit(@RequestBody @Valid UpdateUserRequest request){
+	public IdResponse userEdit(@RequestBody @Valid UpdateUserRequest request){
 		String name = SecurityContextHolder.getContext().getAuthentication().getName();
 		Password password = (Password)passwordService.loadUserByUsername(name);
-		log.info(password.getPassword());
-		log.info(passwordEncoder.encode(request.getPassword()));
 		if(!passwordEncoder.matches(request.getPassword(), password.getPassword())){
 			throw new NotEqualPassword("비밀번호가 다름");
 		}
@@ -79,7 +78,7 @@ public class UserController {
 
 		userService.updateUser(password, profile, request);
 
-		return new UserResponseDto(password, profile, user.getPoint());
+		return new IdResponse(user.getId());
 	}
 
 	@GetMapping("/")

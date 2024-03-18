@@ -14,6 +14,10 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.NamedAttributeNode;
+import jakarta.persistence.NamedEntityGraph;
+import jakarta.persistence.NamedEntityGraphs;
+import jakarta.persistence.NamedSubgraph;
 import jakarta.persistence.OneToOne;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -23,6 +27,26 @@ import shared_backend.used_stuff.dto.user.UpdateUserRequest;
 @Entity
 @Getter @Setter
 @NoArgsConstructor(access = PROTECTED)
+@NamedEntityGraphs({
+	@NamedEntityGraph(
+		name = "password-with-user",
+		attributeNodes = {
+			@NamedAttributeNode("user"),
+		}
+	),
+	@NamedEntityGraph(
+		name = "password-with-user-and-profile",
+		attributeNodes = {
+			@NamedAttributeNode(value = "user", subgraph = "profile"),
+		},
+		subgraphs = {@NamedSubgraph(
+			name = "profile",
+			attributeNodes = {
+				@NamedAttributeNode("profile")
+			}
+		)}
+	)
+})
 public class Password implements UserDetails {
 	@Id @GeneratedValue
 	private Long id;
