@@ -19,10 +19,10 @@ public class GlobalExceptionHandler {
 		private String error;
 	}
 
-	@ExceptionHandler(NoSuchElementException.class)
-	public E NSE() {
-		return new E("id값이 잘못되었습니다");
-	}
+	// @ExceptionHandler(NoSuchElementException.class)
+	// public E NSE() {
+	// 	return new E("id값이 잘못되었습니다");
+	// }
 
 	@ExceptionHandler(NotEqualPassword.class)
 	//boards/{id} 에서 id 값에 long 값이 안들어오고 comments 와 같이 String 이 들어와도  비번틀렸다 에러

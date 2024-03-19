@@ -4,27 +4,34 @@ import static java.util.stream.Collectors.*;
 import static shared_backend.used_stuff.entity.board.Status.*;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import shared_backend.used_stuff.dto.board.CommentResponse;
 import shared_backend.used_stuff.dto.board.CreateCommentRequest;
 import shared_backend.used_stuff.dto.board.UpdateCommentRequest;
 import shared_backend.used_stuff.entity.board.Board;
 import shared_backend.used_stuff.entity.board.BoardComment;
+import shared_backend.used_stuff.entity.board.Status;
 import shared_backend.used_stuff.repository.CommentRepository;
 
 @Service
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
+@Slf4j
 public class CommentService extends Check {
 	private final CommentRepository commentRepository;
 	private final BoardService boardService;
 	public List<CommentResponse> comments(Long boardId) {
-		Board board = boardService.findBoard(boardId);
-		List<BoardComment> comments = commentRepository.findAllByBoardAndStatusNot(board, delete);
+		List<BoardComment> comments = boardService.findBoardFetchComment(boardId)
+			.getBoardComments()
+			.stream()
+			.filter(comment -> comment.getStatus() != delete)
+			.toList();
 		return comments.stream().map(comment -> {
 			return new CommentResponse(boardId, comment);
 		}).collect(toList());

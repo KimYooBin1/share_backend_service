@@ -70,6 +70,7 @@ public class UserController {
 	public IdResponse userEdit(@RequestBody @Valid UpdateUserRequest request){
 		String name = SecurityContextHolder.getContext().getAuthentication().getName();
 		Password password = (Password)passwordService.loadUserByUsername(name);
+		//해당 부분이 없으면 비밀번호변경이 가능. 따라서 유저 정보 변경과 password 는 분리해야 된다.
 		if(!passwordEncoder.matches(request.getPassword(), password.getPassword())){
 			throw new NotEqualPassword("비밀번호가 다름");
 		}

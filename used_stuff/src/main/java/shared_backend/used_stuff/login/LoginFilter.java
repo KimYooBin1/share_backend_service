@@ -13,12 +13,15 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import shared_backend.used_stuff.dto.user.IdResponse;
 import shared_backend.used_stuff.entity.user.Password;
 
 @Slf4j
@@ -26,6 +29,7 @@ import shared_backend.used_stuff.entity.user.Password;
 public class LoginFilter extends UsernamePasswordAuthenticationFilter {
 	private final AuthenticationManager authenticationManager;
 	private final JWTUtil jwtUtil;
+	private final ObjectMapper objectMapper = new ObjectMapper();
 
 	@Override
 	public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) {
@@ -45,7 +49,10 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
 	@Override
 	protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authentication) throws
 		IOException {
-		response.getWriter().write("login success");
+		IdResponse idResponse = new IdResponse(1L);
+		// Jackson ObjectMapper를 사용하여 idResponse 객체를 JSON 문자열로 변환합니다.
+		String jsonResponse = objectMapper.writeValueAsString(idResponse);
+		response.getWriter().write(jsonResponse);
 		//password
 		Password password = (Password) authentication.getPrincipal();
 
@@ -66,7 +73,9 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
 	@Override
 	protected void unsuccessfulAuthentication(HttpServletRequest request, HttpServletResponse response,
 		org.springframework.security.core.AuthenticationException failed) throws IOException, ServletException {
-		response.getWriter().write("login fail");
+		IdResponse idResponse = new IdResponse(0L);
+		String jsonResponse = objectMapper.writeValueAsString(idResponse);
+		response.getWriter().write(jsonResponse);
 		response.setStatus(401);
 	}
 

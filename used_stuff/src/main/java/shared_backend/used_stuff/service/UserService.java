@@ -21,7 +21,6 @@ import shared_backend.used_stuff.repository.UserRepository;
 public class UserService {
 	private final UserRepository userRepository;
 	private final ProfileRepository profileRepository;
-	private final PasswordServiceImpl passwordService;
 	private final PasswordEncoder encoder;
 	public Profile createProfile(JoinRequestDto request) {
 		return new Profile(request.getName(),request.getAge(), request.getGender() ,request.getAddress());

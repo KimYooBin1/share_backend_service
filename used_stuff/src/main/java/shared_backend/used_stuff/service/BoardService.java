@@ -4,6 +4,7 @@ import static shared_backend.used_stuff.entity.board.Status.*;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -47,7 +48,12 @@ public class BoardService extends Check {
 	}
 
 	public Board findBoard(Long id){
-		return boardRepository.findBoardFetchComments(id, delete).get();
+		return boardRepository.findById(id).get();
+	}
+
+	public Board findBoardFetchComment(Long id){
+		return boardRepository.findBoardFetchComments(id);
+
 	}
 
 	@Transactional

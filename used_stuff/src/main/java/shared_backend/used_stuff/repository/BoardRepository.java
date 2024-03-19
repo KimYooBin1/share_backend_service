@@ -5,6 +5,7 @@ import java.util.Optional;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -22,7 +23,7 @@ public interface BoardRepository extends JpaRepository<Board, Long> {
 
 	List<BoardListDto> findAllProjectedByLikesGreaterThan(int like, Pageable pageable);
 
-	// @EntityGraph(attributePaths = {"boardComments"})
-	@Query("select b from Board b left join fetch b.boardComments c where b.id = :id and c.status <> :status")
-	Optional<Board> findBoardFetchComments(@Param("id") Long id, @Param("status") Status status);
+	@EntityGraph(attributePaths = {"boardComments"})
+	@Query("select b from Board b left join fetch b.boardComments c where b.id = :id")
+	Board findBoardFetchComments(@Param("id") Long id);
 }

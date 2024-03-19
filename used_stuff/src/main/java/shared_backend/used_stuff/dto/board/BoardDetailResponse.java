@@ -20,7 +20,6 @@ public class BoardDetailResponse {
 	private int like;
 	private int dislike;
 	private LocalDateTime createDate;
-	private List<CommentFetchJoinResponse> comments;
 
 	public BoardDetailResponse(Board board) {
 		this.id = board.getId();
@@ -31,6 +30,5 @@ public class BoardDetailResponse {
 		this.like = board.getLikes();
 		this.dislike = board.getDislikes();
 		this.createDate = board.getCreateDate();
-		this.comments = board.getBoardComments().stream().map(CommentFetchJoinResponse::new).collect(Collectors.toList());
 	}
 }
