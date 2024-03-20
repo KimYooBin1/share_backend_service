@@ -13,6 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import shared_backend.used_stuff.dto.user.JoinRequestDto;
+import shared_backend.used_stuff.dto.user.UpdatePasswordRequest;
 import shared_backend.used_stuff.entity.user.Password;
 import shared_backend.used_stuff.entity.user.User;
 import shared_backend.used_stuff.exception.AlreadyExistId;
@@ -40,6 +41,12 @@ public class PasswordServiceImpl implements UserDetailsService {
 			throw new AlreadyExistId("이미 존제하는 user name 입니다");
 		}
 		return new Password(request.getUsername(), passwordEncoder.encode(request.getPassword()), "user");
+	}
+
+	@Transactional
+	public Password updatePassword(Password password, UpdatePasswordRequest request, PasswordEncoder encoder) {
+		password.updatePassword(request, encoder);
+		return password;
 	}
 
 	public User findUser() {

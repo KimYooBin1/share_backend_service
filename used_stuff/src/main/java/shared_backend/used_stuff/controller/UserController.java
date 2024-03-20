@@ -27,6 +27,7 @@ import shared_backend.used_stuff.dto.shop.ShopBoardResponse;
 import shared_backend.used_stuff.dto.user.IdResponse;
 import shared_backend.used_stuff.dto.user.JoinRequestDto;
 import shared_backend.used_stuff.dto.user.JoinResponseDto;
+import shared_backend.used_stuff.dto.user.UpdatePasswordRequest;
 import shared_backend.used_stuff.dto.user.UpdateUserRequest;
 import shared_backend.used_stuff.dto.user.UserResponseDto;
 import shared_backend.used_stuff.entity.shopboard.ShopBoard;
@@ -42,7 +43,7 @@ import shared_backend.used_stuff.service.UserService;
 @Slf4j
 @RequiredArgsConstructor
 public class UserController {
-
+	//TODO : service 로직으로 코드 옮기기
 	private final PasswordServiceImpl passwordService;
 	private final UserService userService;
 	private final PasswordEncoder passwordEncoder;
@@ -96,12 +97,19 @@ public class UserController {
 		if(!passwordEncoder.matches(request.getPassword(), password.getPassword())){
 			throw new NotEqualPassword("비밀번호가 다름");
 		}
-		User user = password.getUser();
-		Profile profile = user.getProfile();
+		userService.updateUser(password.getUser().getProfile(), request);
 
-		userService.updateUser(password, profile, request);
+		return new IdResponse(password.getUser().getId());
+	}
 
-		return new IdResponse(user.getId());
+	@PostMapping("/user/edit/password")
+	public IdResponse userEditPassword(@RequestBody @Valid UpdatePasswordRequest request) {
+		Password password = (Password)passwordService.loadUserByUsername(
+			SecurityContextHolder.getContext().getAuthentication().getName());
+		if(!passwordEncoder.matches(request.getCheckPassword(), password.getPassword())){
+			throw new NotEqualPassword("비밀번호가 다름");
+		}
+		return new IdResponse(passwordService.updatePassword(password, request, passwordEncoder).getUser().getId());
 	}
 
 	@GetMapping("/")

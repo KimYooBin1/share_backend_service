@@ -37,9 +37,8 @@ public class UserService {
 		return user;
 	}
 	@Transactional
-	public void updateUser(Password password, Profile profile, UpdateUserRequest request) {
+	public void updateUser(Profile profile, UpdateUserRequest request) {
 		profile.updateProfile(request);
-		password.updatePassword(request, encoder);
 	}
 
 	public User findUser(Long id) {

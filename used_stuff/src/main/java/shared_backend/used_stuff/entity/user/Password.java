@@ -22,6 +22,7 @@ import jakarta.persistence.OneToOne;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import shared_backend.used_stuff.dto.user.UpdatePasswordRequest;
 import shared_backend.used_stuff.dto.user.UpdateUserRequest;
 
 @Entity
@@ -109,7 +110,7 @@ public class Password implements UserDetails {
 		return true;	//이용가능한 계쩡?
 	}
 
-	public void updatePassword(UpdateUserRequest request, PasswordEncoder encoder) {
-		if(request.getPassword() != null) this.passwordHashed = encoder.encode(request.getPassword());
+	public void updatePassword(UpdatePasswordRequest request, PasswordEncoder encoder) {
+		this.passwordHashed = encoder.encode(request.getEditPassword());
 	}
 }
