@@ -2,8 +2,6 @@ package shared_backend.used_stuff.service;
 
 import static shared_backend.used_stuff.entity.board.Status.*;
 import static shared_backend.used_stuff.entity.shopboard.ProductStatus.*;
-import static shared_backend.used_stuff.entity.shopboard.QShopBoard.*;
-import static shared_backend.used_stuff.entity.user.QProfile.*;
 
 import java.util.List;
 import java.util.Objects;
@@ -14,8 +12,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import com.querydsl.core.Tuple;
 
 import lombok.RequiredArgsConstructor;
 import shared_backend.used_stuff.dto.shop.ShopBoardRequest;
@@ -38,32 +34,37 @@ public class ShopBoardService {
 	public Page<ShopBoardResponse> shopBoardList(Pageable pageable, String type, String search){
 		if(search==null){
 			if(Objects.equals(type, "sold")){
-				return shopBoardRepository.findAllByProductStatus(sold, pageable)
+				return shopBoardRepository.findAllByProductStatusAndStatusNot(sold, delete, pageable)
 					.map(s -> new ShopBoardResponse(s.getId(), s.getTitle(), s.getUser().getProfile().getName(),
 						s.getBuyer().getProfile().getName(), s.getProductStatus(), s.getCreateDate()));
 			}
 			else if(Objects.equals(type, "sell")){
-				return shopBoardRepository.findAllByProductStatus(sell, pageable)
+				return shopBoardRepository.findAllByProductStatusAndStatusNot(sell,delete, pageable)
 					.map(s -> new ShopBoardResponse(s.getId(), s.getTitle(), s.getUser().getProfile().getName(),
 						s.getProductStatus(), s.getCreateDate()));
 			}
 			else{
-				return shopBoardRepository.findAll(pageable).map(s -> new ShopBoardResponse(s.getId(), s.getTitle(), s.getUser().getProfile().getName(),
+				return shopBoardRepository.findAllByStatusNot(delete, pageable).map(s -> new ShopBoardResponse(s.getId(), s.getTitle(), s.getUser().getProfile().getName(),
 					s.getProductStatus(), s.getCreateDate()));
 			}
 		}
 		else{
 			if(Objects.equals(type, "sold")){
-				return shopBoardRepository.findAllByTitleContainingAndProductStatus(search, sold, pageable).map(s -> new ShopBoardResponse(s.getId(), s.getTitle(), s.getUser().getProfile().getName(),
-					s.getBuyer().getProfile().getName(), s.getProductStatus(), s.getCreateDate()));
+				return shopBoardRepository.findAllByTitleContainingAndProductStatusAndStatusNot(search, sold, delete,
+						pageable)
+					.map(s -> new ShopBoardResponse(s.getId(), s.getTitle(), s.getUser().getProfile().getName(),
+						s.getBuyer().getProfile().getName(), s.getProductStatus(), s.getCreateDate()));
 			}
 			else if(Objects.equals(type, "sell")){
-				return shopBoardRepository.findAllByTitleContainingAndProductStatus(search, sell, pageable).map(s -> new ShopBoardResponse(s.getId(), s.getTitle(), s.getUser().getProfile().getName(),
-					s.getProductStatus(), s.getCreateDate()));
+				return shopBoardRepository.findAllByTitleContainingAndProductStatusAndStatusNot(search, sell, delete,
+						pageable)
+					.map(s -> new ShopBoardResponse(s.getId(), s.getTitle(), s.getUser().getProfile().getName(),
+						s.getProductStatus(), s.getCreateDate()));
 			}
 			else{
-				return shopBoardRepository.findAllByTitleContaining(search, pageable).map(s -> new ShopBoardResponse(s.getId(), s.getTitle(), s.getUser().getProfile().getName(),
-					s.getProductStatus(), s.getCreateDate()));
+				return shopBoardRepository.findAllByTitleContainingAndStatusNot(search, delete, pageable)
+					.map(s -> new ShopBoardResponse(s.getId(), s.getTitle(), s.getUser().getProfile().getName(),
+						s.getProductStatus(), s.getCreateDate()));
 			}
 		}
 	}
