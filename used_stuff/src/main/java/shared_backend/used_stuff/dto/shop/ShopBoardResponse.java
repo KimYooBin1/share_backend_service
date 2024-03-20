@@ -3,9 +3,11 @@ package shared_backend.used_stuff.dto.shop;
 import java.time.LocalDateTime;
 
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import shared_backend.used_stuff.entity.shopboard.ProductStatus;
 
 @Data
+@NoArgsConstructor
 public class ShopBoardResponse {
 	private Long id;
 	private String title;

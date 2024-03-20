@@ -2,7 +2,12 @@ package shared_backend.used_stuff.controller;
 
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.List;
+import java.util.stream.Collectors;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -12,21 +17,25 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import shared_backend.used_stuff.dto.shop.ShopBoardResponse;
 import shared_backend.used_stuff.dto.user.IdResponse;
 import shared_backend.used_stuff.dto.user.JoinRequestDto;
 import shared_backend.used_stuff.dto.user.JoinResponseDto;
 import shared_backend.used_stuff.dto.user.UpdateUserRequest;
 import shared_backend.used_stuff.dto.user.UserResponseDto;
+import shared_backend.used_stuff.entity.shopboard.ShopBoard;
 import shared_backend.used_stuff.entity.user.Password;
 import shared_backend.used_stuff.entity.user.Profile;
 import shared_backend.used_stuff.entity.user.User;
 import shared_backend.used_stuff.exception.NotEqualPassword;
 import shared_backend.used_stuff.service.PasswordServiceImpl;
+import shared_backend.used_stuff.service.ShopBoardService;
 import shared_backend.used_stuff.service.UserService;
 
 @RestController
@@ -37,6 +46,7 @@ public class UserController {
 	private final PasswordServiceImpl passwordService;
 	private final UserService userService;
 	private final PasswordEncoder passwordEncoder;
+	private final ShopBoardService shopBoardService;
 
 	@PostMapping("/join")
 	public IdResponse join(@RequestBody @Valid JoinRequestDto request) {
@@ -65,6 +75,18 @@ public class UserController {
 		Password password = (Password)passwordService.loadUserByUsername(name);
 		return new UserResponseDto(password, password.getUser().getProfile(), password.getUser().getPoint());
 	}
+
+	@GetMapping("/user/orderList")
+	public List<ShopBoardResponse> orderList(@PageableDefault(size = 10) Pageable pageable,
+		@RequestParam(value = "type", required = false) String type,
+		@RequestParam(value = "search", required = false) String search){
+		// TODO : search, pagination
+		// TODO : password Entity에 대한 query문이 두번 발생함.
+		return shopBoardService.findOrderListByName(
+			SecurityContextHolder.getContext().getAuthentication().getName());
+
+	}
+
 
 	@PostMapping("/user/edit")
 	public IdResponse userEdit(@RequestBody @Valid UpdateUserRequest request){

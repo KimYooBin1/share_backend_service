@@ -38,12 +38,26 @@ dependencies {
 	implementation 'io.jsonwebtoken:jjwt-impl:0.12.3'
 	implementation 'io.jsonwebtoken:jjwt-jackson:0.12.3'
 
+	//mysql 연동
+	runtimeOnly 'com.mysql:mysql-connector-j'
 
-	runtimeOnly 'com.mysql:mysql-connector-j' //mysql 연동
+	//test DB
+	runtimeOnly 'com.h2database:h2'
 
-	runtimeOnly 'com.h2database:h2'	//test DB
+	//test 롬복 사용
+	testCompileOnly 'org.projectlombok:lombok'
+	testAnnotationProcessor 'org.projectlombok:lombok'
+
+	//Querydsl 추가
+	implementation 'com.querydsl:querydsl-jpa:5.0.0:jakarta'
+	annotationProcessor "com.querydsl:querydsl-apt:${dependencyManagement.importedProperties['querydsl.version']}:jakarta"
+	annotationProcessor "jakarta.annotation:jakarta.annotation-api"
+	annotationProcessor "jakarta.persistence:jakarta.persistence-api"
 }
 
 tasks.named('test') {
 	useJUnitPlatform()
+}
+clean {
+	delete file('src/main/generated')
 }

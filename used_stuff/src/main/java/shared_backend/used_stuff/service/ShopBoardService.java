@@ -2,14 +2,20 @@ package shared_backend.used_stuff.service;
 
 import static shared_backend.used_stuff.entity.board.Status.*;
 import static shared_backend.used_stuff.entity.shopboard.ProductStatus.*;
+import static shared_backend.used_stuff.entity.shopboard.QShopBoard.*;
+import static shared_backend.used_stuff.entity.user.QProfile.*;
 
+import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import com.querydsl.core.Tuple;
 
 import lombok.RequiredArgsConstructor;
 import shared_backend.used_stuff.dto.shop.ShopBoardRequest;
@@ -69,6 +75,19 @@ public class ShopBoardService {
 		}
 		return findBoard;
 	}
+
+	public List<ShopBoard> findOrderList(Long id){
+		List<ShopBoard> orderList = shopBoardRepository.findOrderList(id);
+		return orderList;
+	}
+	public List<ShopBoardResponse> findOrderListByName(String name){
+		List<ShopBoard> orderListByName = shopBoardRepository.findOrderListByName(name);
+		return orderListByName.stream()
+			.map(o -> new ShopBoardResponse(o.getId(), o.getUser().getProfile().getName(),
+				o.getBuyer().getProfile().getName(), o.getProductStatus(), o.getCreateDate())).collect(
+				Collectors.toList());
+	}
+
 	@Transactional
 	public ShopBoard createShopBoard(ShopBoardRequest request){
 		User user = passwordService.findUser();
@@ -135,5 +154,6 @@ public class ShopBoardService {
 		findBoard.statusChange(status);
 		return findBoard;
 	}
+
 
 }

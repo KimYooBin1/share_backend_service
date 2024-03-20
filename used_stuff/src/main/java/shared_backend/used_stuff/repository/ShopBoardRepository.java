@@ -10,9 +10,10 @@ import org.springframework.stereotype.Repository;
 
 import shared_backend.used_stuff.entity.shopboard.ProductStatus;
 import shared_backend.used_stuff.entity.shopboard.ShopBoard;
+import shared_backend.used_stuff.repository.custom.ShopBoardRepositoryCustom;
 
 @Repository
-public interface ShopBoardRepository extends JpaRepository<ShopBoard, Long> {
+public interface ShopBoardRepository extends JpaRepository<ShopBoard, Long>, ShopBoardRepositoryCustom {
 	@EntityGraph("shopBoard-with-user-and-profile")
 	Page<ShopBoard> findAllByProductStatus(ProductStatus status, Pageable pageable);
 	@EntityGraph("shopBoard-with-user-and-profile")
