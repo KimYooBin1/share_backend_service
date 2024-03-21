@@ -7,12 +7,14 @@ import static shared_backend.used_stuff.entity.user.QUser.*;
 
 import java.util.List;
 
-import com.querydsl.core.Tuple;
+import com.querydsl.core.types.dsl.BooleanExpression;
+import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 
 import lombok.RequiredArgsConstructor;
 import shared_backend.used_stuff.entity.board.Status;
 import shared_backend.used_stuff.entity.shopboard.ShopBoard;
+import shared_backend.used_stuff.entity.user.QPassword;
 import shared_backend.used_stuff.entity.user.QProfile;
 import shared_backend.used_stuff.entity.user.QUser;
 
@@ -21,38 +23,49 @@ public class ShopBoardRepositoryImpl implements ShopBoardRepositoryCustom {
 	private final JPAQueryFactory query;
 
 	@Override
-	public List<ShopBoard> findOrderList(Long id) {
+	public List<ShopBoard> findOrderSearchList(String name, String type, String search) {
 		QUser buyer = new QUser("buyer");
 		QProfile buyerProfile = new QProfile("buyerProfile");
-		return query
+		QPassword buyerPassword = new QPassword("buyerPassword");
+
+		BooleanExpression searchPredicate = null;
+
+		if (search != null && !search.isEmpty()) {
+			searchPredicate = shopBoard.title.contains(search);
+		}
+
+		JPAQuery<ShopBoard> findQuery = query
 			.select(shopBoard)
 			.from(shopBoard)
 			.join(shopBoard.user, user).fetchJoin()
-			.join(shopBoard.user.profile, profile).fetchJoin()
-			.join(shopBoard.buyer, buyer).fetchJoin()
-			.join(buyer.profile, buyerProfile).fetchJoin()
-			.join(shopBoard.buyer.profile, buyerProfile).fetchJoin()
-
-			.where(shopBoard.status.eq(Status.delete).not(),
-				shopBoard.buyer.id.eq(id))
-			.fetch();
-	}
-
-	@Override
-	public List<ShopBoard> findOrderListByName(String name) {
-		QUser buyer = new QUser("buyer");
-		QProfile buyerProfile = new QProfile("buyerProfile");
-		return query
-			.select(shopBoard)
-			.from(shopBoard)
-			.join(shopBoard.user, user).fetchJoin()
-			.join(shopBoard.buyer, buyer).fetchJoin()
-			.join(buyer.password, password).fetchJoin()
+			.join(user.password, password).fetchJoin()
 			.join(user.profile, profile).fetchJoin()
-			.join(buyer.profile, buyerProfile).fetchJoin()
+			.leftJoin(shopBoard.buyer, buyer).fetchJoin()
+			.leftJoin(buyer.password, buyerPassword).fetchJoin()
+			.leftJoin(buyer.profile, buyerProfile).fetchJoin();
 
-			.where(shopBoard.status.eq(Status.delete).not(),
-				password.username.eq(name))
-			.fetch();
+		if("sell".equals(type)){
+			return findQuery
+				.where(shopBoard.status.eq(Status.delete).not(),
+					searchPredicate,
+					password.username.eq(name))
+				.fetch();
+		}
+		else if("buy".equals(type)){
+			return findQuery
+				.where(shopBoard.status.eq(Status.delete).not(),
+					searchPredicate,
+					buyerPassword.username.eq(name))
+				.fetch();
+		}
+		else if(type == null){
+			return findQuery.where(shopBoard.status.eq(Status.delete).not(),
+					searchPredicate,
+					(buyerPassword.username.eq(name).or(password.username.eq(name))))
+				.fetch();
+		}
+		else {
+			throw new IllegalArgumentException("Invalid type: " + type);
+		}
 	}
 }

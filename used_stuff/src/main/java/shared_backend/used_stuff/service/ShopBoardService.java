@@ -77,15 +77,12 @@ public class ShopBoardService {
 		return findBoard;
 	}
 
-	public List<ShopBoard> findOrderList(Long id){
-		List<ShopBoard> orderList = shopBoardRepository.findOrderList(id);
-		return orderList;
-	}
-	public List<ShopBoardResponse> findOrderListByName(String name){
-		List<ShopBoard> orderListByName = shopBoardRepository.findOrderListByName(name);
+	public List<ShopBoardResponse> findOrderListByName(String name, String type, String search){
+		List<ShopBoard> orderListByName = shopBoardRepository.findOrderSearchList(name, type, search);
 		return orderListByName.stream()
-			.map(o -> new ShopBoardResponse(o.getId(), o.getUser().getProfile().getName(),
-				o.getBuyer().getProfile().getName(), o.getProductStatus(), o.getCreateDate())).collect(
+			.map(o -> new ShopBoardResponse(o.getId(), o.getTitle(), o.getUser().getProfile().getName(),
+				o.getBuyer() == null ? "" : o.getBuyer().getProfile().getName(),
+				o.getProductStatus(), o.getCreateDate())).collect(
 				Collectors.toList());
 	}
 

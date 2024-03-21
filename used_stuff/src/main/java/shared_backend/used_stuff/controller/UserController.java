@@ -9,7 +9,6 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -37,10 +36,8 @@ import shared_backend.used_stuff.service.UserService;
 @Slf4j
 @RequiredArgsConstructor
 public class UserController {
-	//TODO : service 로직으로 코드 옮기기
 	private final PasswordServiceImpl passwordService;
 	private final UserService userService;
-	private final PasswordEncoder passwordEncoder;
 	private final ShopBoardService shopBoardService;
 
 	@PostMapping("/join")
@@ -70,12 +67,11 @@ public class UserController {
 	@GetMapping("/user/orderList")
 	public List<ShopBoardResponse> orderList(@PageableDefault(size = 10) Pageable pageable,
 		@RequestParam(value = "type", required = false) String type,
-		@RequestParam(value = "search", required = false) String search){
-		// TODO : search, pagination
-		// TODO : password Entity에 대한 query문이 두번 발생함.
+		@RequestParam(value = "search", required = false) String search,
+		@RequestParam(value = "page", required = false) Integer page){
+		// TODO : pagination
 		return shopBoardService.findOrderListByName(
-			SecurityContextHolder.getContext().getAuthentication().getName());
-
+			SecurityContextHolder.getContext().getAuthentication().getName(), type, search);
 	}
 
 	@PostMapping("/user/edit")
