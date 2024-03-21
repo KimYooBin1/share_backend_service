@@ -20,7 +20,9 @@ java -jar used_stuff-0.0.1-SNAPSHOT.jar
 ```
    
 ## api 목록
-
+<details>
+<summary>api 목록 보기</summary>
+   
 ### [게시글 조회]
 * 기능 : 게시글 10개씩 조회
    * url : [hosturl/boards?page={pageNum}&search={search}](http://localhost:8080/boards)
@@ -118,6 +120,9 @@ java -jar used_stuff-0.0.1-SNAPSHOT.jar
       * addressDetail
       * zipcode
   * output
+
+## 이후부터는 accessToken 필요 
+
 ### [본인 정보 확인]
 * 기능 : 마이페이지
   * url : [hosturl/user/detail](http://localhost:8080/user/detail)
@@ -134,11 +139,76 @@ java -jar used_stuff-0.0.1-SNAPSHOT.jar
       * addressDetail
       * zipcode
   * output
-     
+### [비밀번호 변경]
+* 기능 : 비밀번호 변경
+  * url : [hosturl/user/edit/password](http:/localhost:8080/user/edit/password)
+  * input
+    * checkPassword : 기존 비밀번호와 조회해서 권한 획득
+    * editPassword : 변경하고 싶은 비밀번호
+### [유저 주문, 판매 목록 조회]
+* 기능 :
+  * url : [hosturl/user/orderList?type="type"&search="search"&page=1](http:/localhost:8080/user/orderList?)
+  * input (url parameter)
+    * type : sell(판매 목록), buy(구매 목록), null(전체 조회)
+    * search : notNull(title 검색), null(전체 조회)
+    * page : pagiantion
+### [중고 장터 조회]
+* 기능 : list로 pagination과 검색을 통해 10개씩 출력
+  * url : [hosturl/shops?type="type"&search="search"&page=1&sort=id,desc](http://localhost:8080/shops)
+  * input (url parameter)
+    * type : sold(판매된 상품 조회), sell(판매중인 상품 조회), null(전체 조회)
+    * search : notNull(title 검색), null(전체 조회)
+    * page :pagination
+    * sort : createDate, id, desc(내림차순), acs(오름차순)
+### [중고 장터 상세 조회] 
+* 기능 : 
+  * url : [hosturl/shops/{shop_id}/detail](http://localhost:8080/shops/1/detail)
+  * input
+    * shop_id : 조회하려는 board의 아이디
+### [중고 판매글 등록] 
+* 기능 : 판매 등록
+  * url : [hosturl/shops/create](http://localhost:8080/shops/create)
+  * input (request body format)
+    * title : 판매글 제목
+    * content : 판매글 내용
+    * url : 판매글 사진 url
+    * price : 가격
+    * address : 판매 장소
+      * zipcode
+      * address
+      * addressDetail
+### [판매글 수정]
+* 기능 : 내용 수정
+  * url : [hosturl/shops/{shop_id}/edit](http://localhost:8080/shops/1/edit)
+  * input : (request body format)
+    * shop_id : 수정하려는 board의 id
+    * title : 판매글 제목
+    * content : 판매글 내용
+    * url : 판매글 사진 url
+    * price : 가격
+    * address : 판매 장소
+      * zipcode
+      * address
+      * addressDetail
+### [판매글 삭제]
+* 기능 : 작성글 삭제
+  * url : [hosturl/shops/{shop_id}/delete](http://localhost:8080/shops/1/delete)
+  * input
+    * board_id : 삭제하려는 board id
+### [물품 구매]
+* 기능 : 해당 물품 구매, 구매 후 buyer 의 point는 price 만큼 감소, seller의 point는 증가, board의 purductStatus는 sold로 변경
+* url : [hosturl/shops/{shop_id}/purchase](http://localhost:8080/shops/1/purchase)
+* input
+  * shop_id : 구매하려는 board의 id
+## [구매 취소]
+* 기능 : 물품 구매 취소, seller로 부터 point 반환
+* url : [hosturl/shops/{shop_id}/cancel](http://localhost:8080/shops/1/cancel)
+* input
+  * shop_id : 취소하려는 board의 id
         
 _더 많은 예제와 사용법은 [Wiki][wiki]를 참고하세요._
 
-
+</details>
 
 ## 프로젝트 정리
 1. [api 정의 문서](https://docs.google.com/spreadsheets/d/1G-QWd5c6JL1anTlZtuoILePIFl0Aj8eBA71GOUsMkqg/edit?usp=sharing)
