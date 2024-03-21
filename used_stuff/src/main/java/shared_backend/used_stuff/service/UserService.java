@@ -21,7 +21,8 @@ import shared_backend.used_stuff.repository.UserRepository;
 public class UserService {
 	private final UserRepository userRepository;
 	private final ProfileRepository profileRepository;
-	private final PasswordEncoder encoder;
+	private final PasswordServiceImpl passwordService;
+	private final PasswordEncoder passwordEncoder;
 	public Profile createProfile(JoinRequestDto request) {
 		return new Profile(request.getName(),request.getAge(), request.getGender() ,request.getAddress());
 	}
@@ -30,15 +31,15 @@ public class UserService {
 		return profileRepository.findByUser(user);
 	}
 	@Transactional
-	public User createUser(Password password, Profile profile){
-		User user = new User(password, profile);
-		userRepository.save(user);
-
-		return user;
+	public User createUser(JoinRequestDto request){
+		return userRepository.save(
+			new User(passwordService.createPassword(request, passwordEncoder), createProfile(request)));
 	}
 	@Transactional
-	public void updateUser(Profile profile, UpdateUserRequest request) {
-		profile.updateProfile(request);
+	public User updateUser(UpdateUserRequest request) {
+		User user = passwordService.checkPassword(request).getUser();
+		user.getProfile().updateProfile(request);
+		return user;
 	}
 
 	public User findUser(Long id) {

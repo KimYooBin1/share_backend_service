@@ -112,6 +112,7 @@ public class ShopBoardService {
 
 	@Transactional
 	public ShopBoard orderShopBoard(Long id, String type){
+		//TODO : findById 와 findUser 두번의 query 접근발생.
 		ShopBoard findBoard = shopBoardRepository.findById(id).get();
 
 		if(findBoard.getStatus() == delete){

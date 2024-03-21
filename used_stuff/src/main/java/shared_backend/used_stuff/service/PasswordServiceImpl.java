@@ -1,5 +1,6 @@
 package shared_backend.used_stuff.service;
 
+import java.util.Objects;
 import java.util.Optional;
 
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -14,9 +15,11 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import shared_backend.used_stuff.dto.user.JoinRequestDto;
 import shared_backend.used_stuff.dto.user.UpdatePasswordRequest;
+import shared_backend.used_stuff.dto.user.UpdateUserRequest;
 import shared_backend.used_stuff.entity.user.Password;
 import shared_backend.used_stuff.entity.user.User;
 import shared_backend.used_stuff.exception.AlreadyExistId;
+import shared_backend.used_stuff.exception.NotEqualPassword;
 import shared_backend.used_stuff.repository.PasswordRepository;
 
 @Service
@@ -26,9 +29,11 @@ import shared_backend.used_stuff.repository.PasswordRepository;
 public class PasswordServiceImpl implements UserDetailsService {
 
 	private final PasswordRepository passwordRepository;
+	private final PasswordEncoder passwordEncoder;
 
 	@Override
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+		//TODO : 여기서 중복 쿼리가 2번 나가는거 같은데 querydsl로 바꿔서도 fetch join 해보기
 		Optional<Password> findOne = passwordRepository.findByUsername(username);
 
 		return findOne.orElseThrow(
@@ -44,8 +49,10 @@ public class PasswordServiceImpl implements UserDetailsService {
 	}
 
 	@Transactional
-	public Password updatePassword(Password password, UpdatePasswordRequest request, PasswordEncoder encoder) {
-		password.updatePassword(request, encoder);
+	public Password updatePassword(UpdatePasswordRequest request) {
+		Password password = checkPassword(request);
+		passwordDuplicateCheck(request.getCheckPassword(), request.getEditPassword());
+		password.updatePassword(request, passwordEncoder);
 		return password;
 	}
 
@@ -54,5 +61,29 @@ public class PasswordServiceImpl implements UserDetailsService {
 		log.info("name = {}", name);
 		Password password = (Password)loadUserByUsername(name);
 		return password.getUser();
+	}
+
+	public Password checkPassword(UpdatePasswordRequest request){
+		Password password = (Password)loadUserByUsername(
+			SecurityContextHolder.getContext().getAuthentication().getName());
+		if(!passwordEncoder.matches(request.getCheckPassword(), password.getPassword())){
+			throw new NotEqualPassword("비밀번호가 다름");
+		}
+		return password;
+	}
+
+	public Password checkPassword(UpdateUserRequest request){
+		Password password = (Password)loadUserByUsername(
+			SecurityContextHolder.getContext().getAuthentication().getName());
+		if(!passwordEncoder.matches(request.getPassword(), password.getPassword())){
+			throw new NotEqualPassword("비밀번호가 다름");
+		}
+		return password;
+	}
+
+	public void passwordDuplicateCheck(String postPassword, String editPassword) {
+		if(Objects.equals(postPassword, editPassword)){
+			throw new RuntimeException("비밀번호는 동일하면 안됩니다");
+		}
 	}
 }

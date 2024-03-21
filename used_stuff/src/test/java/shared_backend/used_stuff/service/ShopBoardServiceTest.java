@@ -20,6 +20,7 @@ import jakarta.persistence.EntityManager;
 import shared_backend.used_stuff.dto.shop.ShopBoardRequest;
 import shared_backend.used_stuff.dto.shop.ShopBoardResponse;
 import shared_backend.used_stuff.dto.shop.UpdateShopBoardRequest;
+import shared_backend.used_stuff.dto.user.JoinRequestDto;
 import shared_backend.used_stuff.entity.Address;
 import shared_backend.used_stuff.entity.shopboard.ShopBoard;
 import shared_backend.used_stuff.entity.user.Password;
@@ -215,14 +216,13 @@ class ShopBoardServiceTest {
 	}
 
 	private User createUser() {
-		Password password = new Password("user", "password", "user");
-		Profile profile = new Profile("name", 10, female, new Address("zipcode", "address", "addressDetail"));
-
-		return userService.createUser(password, profile);
+		JoinRequestDto request = new JoinRequestDto("user", "password", "name", 10,
+			new Address("zipcode", "address", "addressDetail"), male);
+		return userService.createUser(request);
 	}
 	private User createUser(String username) {
-		Password password = new Password(username, "password", "user");
-		Profile profile = new Profile("name", 10, female, new Address("zipcode", "address", "addressDetail"));
-		return userService.createUser(password, profile);
+		JoinRequestDto request = new JoinRequestDto(username, "password", "name", 10,
+			new Address("zipcode", "address", "addressDetail"), male);
+		return userService.createUser(request);
 	}
 }
