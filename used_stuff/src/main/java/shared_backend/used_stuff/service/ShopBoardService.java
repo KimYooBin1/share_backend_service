@@ -30,43 +30,12 @@ public class ShopBoardService {
 	private final PasswordServiceImpl passwordService;
 
 	//검색, type, sold, sell
-	public Page<ShopBoardResponse> shopBoardList(Pageable pageable, String type, String search){
-		// TODO : querydsl로 변경하기, 중복 코드가 너무 많음
-		if(search==null){
-			if(Objects.equals(type, "sold")){
-				return shopBoardRepository.findAllByProductStatusAndStatusNot(sold, delete, pageable)
-					.map(s -> new ShopBoardResponse(s.getId(), s.getTitle(), s.getUser().getProfile().getName(),
-						s.getBuyer().getProfile().getName(), s.getProductStatus(), s.getCreateDate()));
-			}
-			else if(Objects.equals(type, "sell")){
-				return shopBoardRepository.findAllByProductStatusAndStatusNot(sell,delete, pageable)
-					.map(s -> new ShopBoardResponse(s.getId(), s.getTitle(), s.getUser().getProfile().getName(),
-						s.getProductStatus(), s.getCreateDate()));
-			}
-			else{
-				return shopBoardRepository.findAllByStatusNot(delete, pageable).map(s -> new ShopBoardResponse(s.getId(), s.getTitle(), s.getUser().getProfile().getName(),
-					s.getProductStatus(), s.getCreateDate()));
-			}
-		}
-		else{
-			if(Objects.equals(type, "sold")){
-				return shopBoardRepository.findAllByTitleContainingAndProductStatusAndStatusNot(search, sold, delete,
-						pageable)
-					.map(s -> new ShopBoardResponse(s.getId(), s.getTitle(), s.getUser().getProfile().getName(),
-						s.getBuyer().getProfile().getName(), s.getProductStatus(), s.getCreateDate()));
-			}
-			else if(Objects.equals(type, "sell")){
-				return shopBoardRepository.findAllByTitleContainingAndProductStatusAndStatusNot(search, sell, delete,
-						pageable)
-					.map(s -> new ShopBoardResponse(s.getId(), s.getTitle(), s.getUser().getProfile().getName(),
-						s.getProductStatus(), s.getCreateDate()));
-			}
-			else{
-				return shopBoardRepository.findAllByTitleContainingAndStatusNot(search, delete, pageable)
-					.map(s -> new ShopBoardResponse(s.getId(), s.getTitle(), s.getUser().getProfile().getName(),
-						s.getProductStatus(), s.getCreateDate()));
-			}
-		}
+	public Page<ShopBoardResponse> shopBoardList(Pageable pageable, SearchDto search){
+		return shopBoardRepository.findShopSearchList(search.getType(), search.getSearch(),
+			pageable)
+			.map(o -> new ShopBoardResponse(o.getId(), o.getTitle(), o.getUser().getProfile().getName(),
+				o.getBuyer() == null ? "" : o.getBuyer().getProfile().getName(),
+				o.getProductStatus(), o.getCreateDate()));
 	}
 
 	public ShopBoard findShopBoard(Long id) {

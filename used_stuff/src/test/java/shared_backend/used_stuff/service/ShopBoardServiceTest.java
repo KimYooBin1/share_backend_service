@@ -51,7 +51,7 @@ class ShopBoardServiceTest {
 		em.clear();
 
 		PageRequest page = PageRequest.of(0, 5);
-		Page<ShopBoardResponse> findPage = shopBoardService.shopBoardList(page, null, null);
+		Page<ShopBoardResponse> findPage = shopBoardService.shopBoardList(page, null);
 		assertThat(findPage.getTotalElements()).isEqualTo(5);
 	}
 

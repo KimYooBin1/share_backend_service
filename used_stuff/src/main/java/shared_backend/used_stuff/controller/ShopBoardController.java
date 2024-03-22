@@ -9,12 +9,12 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import shared_backend.used_stuff.dto.SearchDto;
 import shared_backend.used_stuff.dto.shop.ShopBoardRequest;
 import shared_backend.used_stuff.dto.user.IdResponse;
 import shared_backend.used_stuff.dto.shop.ShopBoardDetailResponse;
@@ -29,10 +29,8 @@ public class ShopBoardController {
 	private final ShopBoardService shopBoardService;
 
 	@GetMapping("/shops")
-	public Page<ShopBoardResponse> shopBoards(@PageableDefault(size = 10) Pageable pageable,
-			@RequestParam(value = "type", required = false) String type,
-			@RequestParam(value = "search", required = false) String search){	//search 검색 추가
-		return shopBoardService.shopBoardList(pageable, type, search);
+	public Page<ShopBoardResponse> shopBoards(@PageableDefault(size = 10) Pageable pageable, SearchDto search) {
+		return shopBoardService.shopBoardList(pageable, search);
 	}
 
 	@GetMapping("/shops/{shop_id}/detail")
