@@ -1,4 +1,4 @@
-package shared_backend.used_stuff.dto.board;
+package shared_backend.used_stuff.dto;
 
 import static lombok.AccessLevel.*;
 

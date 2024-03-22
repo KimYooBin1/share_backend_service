@@ -4,7 +4,6 @@ import static shared_backend.used_stuff.entity.board.Status.*;
 
 import java.util.List;
 import java.util.Objects;
-import java.util.Optional;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -15,7 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import lombok.RequiredArgsConstructor;
 import shared_backend.used_stuff.dto.board.CreateBoardRequest;
-import shared_backend.used_stuff.dto.board.SearchDto;
+import shared_backend.used_stuff.dto.SearchDto;
 import shared_backend.used_stuff.dto.board.UpdateBoardRequest;
 import shared_backend.used_stuff.dto.board.BoardListDto;
 import shared_backend.used_stuff.entity.board.Board;

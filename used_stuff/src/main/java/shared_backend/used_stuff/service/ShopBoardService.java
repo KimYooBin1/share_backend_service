@@ -3,9 +3,7 @@ package shared_backend.used_stuff.service;
 import static shared_backend.used_stuff.entity.board.Status.*;
 import static shared_backend.used_stuff.entity.shopboard.ProductStatus.*;
 
-import java.util.List;
 import java.util.Objects;
-import java.util.stream.Collectors;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -14,6 +12,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import lombok.RequiredArgsConstructor;
+import shared_backend.used_stuff.dto.SearchDto;
 import shared_backend.used_stuff.dto.shop.ShopBoardRequest;
 import shared_backend.used_stuff.dto.shop.ShopBoardResponse;
 import shared_backend.used_stuff.dto.shop.UpdateShopBoardRequest;
@@ -32,6 +31,7 @@ public class ShopBoardService {
 
 	//검색, type, sold, sell
 	public Page<ShopBoardResponse> shopBoardList(Pageable pageable, String type, String search){
+		// TODO : querydsl로 변경하기, 중복 코드가 너무 많음
 		if(search==null){
 			if(Objects.equals(type, "sold")){
 				return shopBoardRepository.findAllByProductStatusAndStatusNot(sold, delete, pageable)
@@ -77,13 +77,11 @@ public class ShopBoardService {
 		return findBoard;
 	}
 
-	public List<ShopBoardResponse> findOrderListByName(String name, String type, String search){
-		List<ShopBoard> orderListByName = shopBoardRepository.findOrderSearchList(name, type, search);
-		return orderListByName.stream()
+	public Page<ShopBoardResponse> findOrderListByName(String name, SearchDto search, Pageable pageable){
+		return shopBoardRepository.findOrderSearchList(name, search.getType(),search.getSearch(), pageable)
 			.map(o -> new ShopBoardResponse(o.getId(), o.getTitle(), o.getUser().getProfile().getName(),
 				o.getBuyer() == null ? "" : o.getBuyer().getProfile().getName(),
-				o.getProductStatus(), o.getCreateDate())).collect(
-				Collectors.toList());
+				o.getProductStatus(), o.getCreateDate()));
 	}
 
 	@Transactional
@@ -96,7 +94,7 @@ public class ShopBoardService {
 	}
 	@Transactional
 	public ShopBoard updateShopBoard(Long id, Status status, UpdateShopBoardRequest request){
-		//update시 데이터 변경 확인에 관해 testcode 추가 작성
+		// TODO : update시 데이터 변경 확인에 관해 testcode 추가 작성
 		ShopBoard findBoard = checkStatusAndAccess(id, status);
 		findBoard.updateShopBoard(request);
 		return findBoard;
