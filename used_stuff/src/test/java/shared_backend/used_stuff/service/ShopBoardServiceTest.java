@@ -23,8 +23,6 @@ import shared_backend.used_stuff.dto.shop.UpdateShopBoardRequest;
 import shared_backend.used_stuff.dto.user.JoinRequestDto;
 import shared_backend.used_stuff.entity.Address;
 import shared_backend.used_stuff.entity.shopboard.ShopBoard;
-import shared_backend.used_stuff.entity.user.Password;
-import shared_backend.used_stuff.entity.user.Profile;
 import shared_backend.used_stuff.entity.user.User;
 import shared_backend.used_stuff.exception.AlreadyDeletedException;
 
@@ -166,7 +164,7 @@ class ShopBoardServiceTest {
 		em.clear();
 
 		shopBoardService.orderShopBoard(board.getId(), "purchase");
-		assertThrows(AlreadyDeletedException.class, () ->
+		assertThrows(RuntimeException.class, () ->
 			shopBoardService.orderShopBoard(board.getId(), "purchase")
 		);
 	}

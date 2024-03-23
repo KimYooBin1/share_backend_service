@@ -7,7 +7,7 @@ import java.util.Objects;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -38,8 +38,14 @@ public class ShopBoardService {
 				o.getProductStatus(), o.getCreateDate()));
 	}
 
-	public ShopBoard findShopBoard(Long id) {
-		ShopBoard findBoard = shopBoardRepository.findById(id).get();
+	/**
+	 * board Detail
+	 */
+	public ShopBoard findShopBoard(Long id){
+		// TODO : 뭔데
+		ShopBoard findBoard = shopBoardRepository.findBoardWithFetch(id).orElseThrow(
+			() -> new NullPointerException("")
+		);
 		if(findBoard.getStatus() == delete){
 			throw new AlreadyDeletedException("이미 삭제된 게시글입니다");
 		}
@@ -76,12 +82,13 @@ public class ShopBoardService {
 
 	@Transactional
 	public ShopBoard orderShopBoard(Long id, String type){
-		//TODO : findById 와 findUser 두번의 query 접근발생.
-		ShopBoard findBoard = shopBoardRepository.findById(id).get();
+		//TODO : Optional 처리하고 repositorylmpl 에 type을 전달해서 각각 조건에 맞는 query 작성하기
+		// user는 따로 필요하기 때뮨에 query를 분리하는게 맞나?
+		// test 작성하기
+		ShopBoard findBoard = shopBoardRepository.findBoardWithFetch(id).orElseThrow(
+			() -> new NullPointerException("삭제된 게시글입니다")
+		);
 
-		if(findBoard.getStatus() == delete){
-			throw new AlreadyDeletedException("이미 삭제된 게시글입니다");
-		}
 		User user = passwordService.findUser();
 
 		if(Objects.equals(type, "purchase")){
@@ -108,15 +115,12 @@ public class ShopBoardService {
 		return findBoard;
 	}
 
-	private ShopBoard checkStatusAndAccess(Long id, Status status) {
-		User user = passwordService.findUser();
-		ShopBoard findBoard = shopBoardRepository.findById(id).get();
-		if(findBoard.getStatus() == delete){
-			throw new AlreadyDeletedException("이미 삭제된 게시글입니다");
-		}
-		if(!Objects.equals(user.getId(), findBoard.getUser().getId())){
-			throw new AccessDeniedException("권한이 없습니다");
-		}
+	private ShopBoard checkStatusAndAccess(Long id, Status status) throws NullPointerException{
+
+		ShopBoard findBoard = shopBoardRepository.findBoardWithAuth(id,
+			SecurityContextHolder.getContext().getAuthentication().getName()).orElseThrow(
+			() -> new NullPointerException("삭제되었거나 권한이 없습니다")
+		);
 		findBoard.statusChange(status);
 		return findBoard;
 	}

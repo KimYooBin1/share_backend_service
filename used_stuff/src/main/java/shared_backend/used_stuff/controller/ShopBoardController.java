@@ -44,7 +44,8 @@ public class ShopBoardController {
 	}
 
 	@PostMapping("/shops/{shop_id}/edit")
-	public IdResponse editShopBoard(@PathVariable("shop_id") Long id, @RequestBody @Valid UpdateShopBoardRequest request) {
+	public IdResponse editShopBoard(@PathVariable("shop_id") Long id,
+		@RequestBody @Valid UpdateShopBoardRequest request) {
 		return new IdResponse(shopBoardService.updateShopBoard(id, edit, request).getId());
 	}
 

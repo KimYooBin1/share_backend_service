@@ -1,6 +1,7 @@
 package shared_backend.used_stuff.repository.custom;
 
 import static org.springframework.util.StringUtils.*;
+import static shared_backend.used_stuff.entity.board.Status.*;
 import static shared_backend.used_stuff.entity.shopboard.ProductStatus.*;
 import static shared_backend.used_stuff.entity.shopboard.QShopBoard.*;
 import static shared_backend.used_stuff.entity.user.QPassword.*;
@@ -8,6 +9,7 @@ import static shared_backend.used_stuff.entity.user.QProfile.*;
 import static shared_backend.used_stuff.entity.user.QUser.*;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -18,7 +20,6 @@ import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 
 import lombok.RequiredArgsConstructor;
-import shared_backend.used_stuff.entity.board.Status;
 import shared_backend.used_stuff.entity.shopboard.ShopBoard;
 import shared_backend.used_stuff.entity.user.QPassword;
 import shared_backend.used_stuff.entity.user.QProfile;
@@ -42,7 +43,7 @@ public class ShopBoardRepositoryImpl implements ShopBoardRepositoryCustom {
 			.leftJoin(shopBoard.buyer, buyer).fetchJoin()
 			.leftJoin(buyer.password, buyerPassword).fetchJoin()
 			.leftJoin(buyer.profile, buyerProfile).fetchJoin()
-			.where(shopBoard.status.eq(Status.delete).not(),
+			.where(shopBoard.status.eq(delete).not(),
 				titleContain(search),
 				userEq(type, name))
 			.offset(pageable.getOffset())
@@ -57,7 +58,7 @@ public class ShopBoardRepositoryImpl implements ShopBoardRepositoryCustom {
 			.leftJoin(shopBoard.buyer, buyer).fetchJoin()
 			.leftJoin(buyer.password, buyerPassword).fetchJoin()
 			.leftJoin(buyer.profile, buyerProfile).fetchJoin()
-			.where(shopBoard.status.eq(Status.delete).not(),
+			.where(shopBoard.status.eq(delete).not(),
 				titleContain(search),
 				userEq(type, name));
 
@@ -78,7 +79,7 @@ public class ShopBoardRepositoryImpl implements ShopBoardRepositoryCustom {
 			.leftJoin(shopBoard.buyer, buyer).fetchJoin()
 			.leftJoin(buyer.password, buyerPassword).fetchJoin()
 			.leftJoin(buyer.profile, buyerProfile).fetchJoin()
-			.where(shopBoard.status.eq(Status.delete).not(), productStatusEq(type), titleContain(search))
+			.where(shopBoard.status.eq(delete).not(), productStatusEq(type), titleContain(search))
 			.offset(pageable.getOffset())
 			.limit(pageable.getPageSize())
 			.fetch();
@@ -91,10 +92,54 @@ public class ShopBoardRepositoryImpl implements ShopBoardRepositoryCustom {
 			.leftJoin(shopBoard.buyer, buyer).fetchJoin()
 			.leftJoin(buyer.password, buyerPassword).fetchJoin()
 			.leftJoin(buyer.profile, buyerProfile).fetchJoin()
-			.where(shopBoard.status.eq(Status.delete).not(), productStatusEq(type), titleContain(search));
+			.where(shopBoard.status.eq(delete).not(), productStatusEq(type), titleContain(search));
 
 		return PageableExecutionUtils.getPage(contents, pageable, countQuery::fetchCount);
+	}
 
+	@Override
+	public Optional<ShopBoard> findBoardWithFetch(Long id) {
+		QUser buyer = new QUser("buyer");
+		QProfile buyerProfile = new QProfile("buyerProfile");
+		QPassword buyerPassword = new QPassword("buyerPassword");
+
+		ShopBoard find = query
+			.selectFrom(shopBoard)
+			.join(shopBoard.user, user).fetchJoin()
+			.join(user.password, password).fetchJoin()
+			.join(user.profile, profile).fetchJoin()
+			.leftJoin(shopBoard.buyer, buyer).fetchJoin()
+			.leftJoin(buyer.password, buyerPassword).fetchJoin()
+			.leftJoin(buyer.profile, buyerProfile).fetchJoin()
+			.where(
+				shopBoard.status.eq(delete).not(),
+				shopBoard.id.eq(id)
+			)
+			.fetchOne();
+		return Optional.ofNullable(find);
+	}
+
+	@Override
+	public Optional<ShopBoard> findBoardWithAuth(Long id, String name) {
+		QUser buyer = new QUser("buyer");
+		QProfile buyerProfile = new QProfile("buyerProfile");
+		QPassword buyerPassword = new QPassword("buyerPassword");
+
+		ShopBoard find = query
+			.selectFrom(shopBoard)
+			.join(shopBoard.user, user).fetchJoin()
+			.join(user.password, password).fetchJoin()
+			.join(user.profile, profile).fetchJoin()
+			.leftJoin(shopBoard.buyer, buyer).fetchJoin()
+			.leftJoin(buyer.password, buyerPassword).fetchJoin()
+			.leftJoin(buyer.profile, buyerProfile).fetchJoin()
+			.where(
+				shopBoard.status.eq(delete).not(),
+				shopBoard.id.eq(id),
+				password.username.eq(name)
+			)
+			.fetchOne();
+		return Optional.ofNullable(find);
 	}
 
 	public BooleanExpression productStatusEq(String type){
