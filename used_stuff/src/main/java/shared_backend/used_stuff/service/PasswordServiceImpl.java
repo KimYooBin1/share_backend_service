@@ -33,11 +33,10 @@ public class PasswordServiceImpl implements UserDetailsService {
 
 	@Override
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-		//TODO : 여기서 중복 쿼리가 2번 나가는거 같은데 querydsl로 바꿔서도 fetch join 해보기
-		Optional<Password> findOne = passwordRepository.findByUsername(username);
-
-		return findOne.orElseThrow(
+		Optional<User> findUser = passwordRepository.findByUsernameFetchProfile(username);
+		User user = findUser.orElseThrow(
 			() -> new UsernameNotFoundException(String.format("user_id=%s", username)));
+		return user.getPassword();
 	}
 
 	@Transactional

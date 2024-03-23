@@ -2,10 +2,10 @@ package shared_backend.used_stuff.dto;
 
 import static lombok.AccessLevel.*;
 
-import lombok.Getter;
+import lombok.Data;
 import lombok.NoArgsConstructor;
 
-@Getter
+@Data
 @NoArgsConstructor(access = PROTECTED)
 public class SearchDto {
 	private String type;

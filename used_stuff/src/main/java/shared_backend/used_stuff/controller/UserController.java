@@ -65,9 +65,9 @@ public class UserController {
 	}
 
 	@GetMapping("/user/orderList")
-	public Page<ShopBoardResponse> orderList(@PageableDefault(size = 10) Pageable pageable,
-		SearchDto search){
+	public Page<ShopBoardResponse> orderList(@PageableDefault(size = 10) Pageable pageable, SearchDto search){
 		// TODO : search sort
+		System.out.println("search = " + search.getType());
 		return shopBoardService.findOrderListByName(
 			SecurityContextHolder.getContext().getAuthentication().getName(), search, pageable);
 	}
