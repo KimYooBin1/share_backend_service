@@ -45,7 +45,7 @@ public class Board extends BaseEntity {
 
 	//연관관계 메소드
 	public void addComment(BoardComment comment) {
-		comment.setBoard(this);
+		comment.boardSet(this);
 		this.getBoardComments().add(comment);
 	}
 

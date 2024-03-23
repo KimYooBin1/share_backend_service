@@ -1,7 +1,8 @@
 package shared_backend.used_stuff.controller;
 
-import java.util.List;
-
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -23,20 +24,21 @@ public class CommentController {
 	private final CommentService commentService;
 
 	@GetMapping("/boards/{board_id}/comments")
-	public List<CommentResponse> commentList(@PathVariable("board_id") Long boardId) {
-		return commentService.comments(boardId);
+	public Page<CommentResponse> commentList(@PathVariable("board_id") Long boardId,
+		@PageableDefault(size = 10) Pageable pageable) {
+		return commentService.comments(boardId, pageable);
 	}
 
 	@PostMapping("/boards/{board_id}/comments/create")
 	public CommentResponse createComment(@PathVariable("board_id") Long boardId,
 		@RequestBody @Valid CreateCommentRequest request) {
-		return new CommentResponse(boardId, commentService.createComment(boardId, request));
+		return new CommentResponse(commentService.createComment(boardId, request));
 	}
 
 	@PostMapping("/comments/{comment_id}/edit")
 	public CommentResponse editComment(@PathVariable("comment_id") Long commentId, @RequestBody UpdateCommentRequest request) {
 		BoardComment comment = commentService.editComment(commentId, request);
-		return new CommentResponse(comment.getBoard().getId(), comment);
+		return new CommentResponse(comment);
 	}
 
 	@PostMapping("/comments/{comment_id}/delete")

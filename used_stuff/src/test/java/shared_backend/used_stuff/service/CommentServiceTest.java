@@ -111,9 +111,9 @@ class CommentServiceTest {
 	private BoardComment updateComment(Board board, String password) {
 		BoardComment comment = createComment(board);
 		UpdateCommentRequest request = new UpdateCommentRequest(password, "contents");
+		System.out.println("comment.getId() = " + comment.getId());
 		BoardComment findComment = commentService.findComment(comment.getId());
-		BoardComment editComment = commentService.editComment(findComment.getId(), request);
-		return editComment;
+		return commentService.editComment(findComment.getId(), request);
 	}
 
 	private BoardComment deleteComment(Board board, String password) {

@@ -39,6 +39,7 @@ public class BoardService extends Check {
 	}
 
 	public Board findBoard(Long id){
+		// TODO : delete 처리가 안됨
 		return boardRepository.findById(id).get();
 	}
 
