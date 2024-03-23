@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import jakarta.validation.Valid;
@@ -34,10 +33,9 @@ public class BoardController {
 
 	@GetMapping("/boards")
 	public Page<BoardListDto> boards(@PageableDefault(size=10) Pageable pageable,
-		@RequestParam(value = "type", required = false) String type,
-		@RequestParam(value = "search", required = false) String search){
+		SearchDto search){
 
-		return boardService.boardList(new SearchDto(type, search), pageable);
+		return boardService.boardList(search, pageable);
 	}
 
 	@GetMapping("/boards/best")

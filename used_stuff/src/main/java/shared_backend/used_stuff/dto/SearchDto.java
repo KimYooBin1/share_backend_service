@@ -10,9 +10,4 @@ import lombok.NoArgsConstructor;
 public class SearchDto {
 	private String type;
 	private String search;
-
-	public SearchDto(String type, String search) {
-		this.type = type;
-		this.search = search;
-	}
 }
