@@ -5,6 +5,7 @@ import java.util.Collections;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -37,15 +38,10 @@ public class SecurityConfig{
 	public AuthenticationManager authenticationManager(AuthenticationConfiguration configuration) throws Exception {
 		return configuration.getAuthenticationManager();
 	}
-
-
-
-
 	@Bean
 	public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 		http
 			.cors((corsCustomizer -> corsCustomizer.configurationSource(new CorsConfigurationSource() {
-
 				@Override
 				public CorsConfiguration getCorsConfiguration(HttpServletRequest request) {
 
@@ -63,29 +59,28 @@ public class SecurityConfig{
 				}
 			})));
 		http
-			.csrf(AbstractHttpConfigurer::disable);
-
-		http
-			.formLogin(AbstractHttpConfigurer::disable);
-
-		http
-			.httpBasic(AbstractHttpConfigurer::disable);
-
-		http
+			.csrf(AbstractHttpConfigurer::disable)    //api 서버의 경우 session 이 stateless 로 관리 되기 때문에 disable 로 해도 된다
+			.formLogin(AbstractHttpConfigurer::disable)
+			.httpBasic(Customizer.withDefaults())
+			// .httpBasic(AbstractHttpConfigurer::disable) header 에 값을 받아온다? mvc 에서 보안적인 측면으로 활용
 			.authorizeHttpRequests((auth) -> auth
 				.requestMatchers("/login", "/join", "/boards/**", "/comments/**").permitAll()
-				.anyRequest().authenticated());
-
-		http
+				.requestMatchers("/admin").hasRole("ADMIN")
+				.anyRequest().authenticated())    //위에서 설정해둔 주소 의외의 모든 주소
 			.addFilterBefore(new JWTFilter(jwtUtil), LoginFilter.class);
 
 		//필터 추가 LoginFilter()는 인자를 받음 (AuthenticationManager() 메소드에 authenticationConfiguration 객체를 넣어야 함) 따라서 등록 필요
 		http
-			.addFilterAt(new LoginFilter(authenticationManager(authenticationConfiguration), jwtUtil), UsernamePasswordAuthenticationFilter.class);
-
-		http
+			.addFilterAt(new LoginFilter(authenticationManager(authenticationConfiguration), jwtUtil), UsernamePasswordAuthenticationFilter.class)
 			.sessionManagement((session) -> session
 				.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
+
+		// 다중 로그인 처리, session 으로 처리하는거라 jwt 와 연관 없는거 같음
+		// http
+		// 	.sessionManagement((auth) -> auth
+		// 		.maximumSessions(1)
+		// 		.maxSessionsPreventsLogin(true)
+		// 	);
 
 		return http.build();
 	}

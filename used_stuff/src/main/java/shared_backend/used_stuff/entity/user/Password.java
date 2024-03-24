@@ -10,6 +10,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
@@ -23,7 +24,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import shared_backend.used_stuff.dto.user.UpdatePasswordRequest;
-import shared_backend.used_stuff.dto.user.UpdateUserRequest;
 
 @Entity
 @Getter @Setter
@@ -51,7 +51,7 @@ import shared_backend.used_stuff.dto.user.UpdateUserRequest;
 public class Password implements UserDetails {
 	@Id @GeneratedValue
 	private Long id;
-
+	@Column(unique = true)
 	private String username; //사용자 아이디
 
 	private String passwordHashed;	//암호화된 비밀번호
@@ -70,6 +70,7 @@ public class Password implements UserDetails {
 
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
+		// TODO : 기능 작동하는지 확인
 		Collection<GrantedAuthority> collection = new ArrayList<>();	//사용자별 권한 설정. admin, user? 지금은 사용하지 않음
 		collection.add(new GrantedAuthority() {
 			@Override
@@ -89,6 +90,9 @@ public class Password implements UserDetails {
 	public String getUsername() {
 		return username;
 	}
+
+
+	// 아래 기능을 사용하고 싶으면 password table 에 해당 colum을 만들어서 확인하면 된다
 
 	@Override
 	public boolean isAccountNonExpired() {
