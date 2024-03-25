@@ -84,14 +84,14 @@ public class UserController {
 				.getUser()
 				.getId());
 	}
-
-	@GetMapping("/")
-	public String checkUser() {
-		String name = SecurityContextHolder.getContext().getAuthentication().getName();
-		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-		Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
-		Iterator<? extends GrantedAuthority> iter = authorities.iterator();
-		GrantedAuthority auth = iter.next();
-		return "Main Controller : " + name + " Role : " + auth.getAuthority();
-	}
+	//
+	// @GetMapping("/")
+	// public String checkUser() {
+	// 	String name = SecurityContextHolder.getContext().getAuthentication().getName();
+	// 	Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+	// 	Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
+	// 	Iterator<? extends GrantedAuthority> iter = authorities.iterator();
+	// 	GrantedAuthority auth = iter.next();
+	// 	return "Main Controller : " + name + " Role : " + auth.getAuthority();
+	// }
 }
