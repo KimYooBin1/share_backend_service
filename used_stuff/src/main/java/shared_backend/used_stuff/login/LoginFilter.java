@@ -1,7 +1,6 @@
 package shared_backend.used_stuff.login;
 
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.util.Collection;
 import java.util.Iterator;
 
@@ -17,6 +16,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -67,6 +67,9 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
 		String token = jwtUtil.createJwt(username, role, 60*60*1000L);
 
 		response.addHeader("Authorization", "Bearer " + token);
+		// TODO : header 에서 cookie 로 변환
+		response.addCookie(createCookie("Authorization", token));
+		response.sendRedirect("http://localhost:3000/");
 	}
 
 	//로그인 실패시 실행하는 메소드
@@ -77,6 +80,17 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
 		String jsonResponse = objectMapper.writeValueAsString(idResponse);
 		response.getWriter().write(jsonResponse);
 		response.setStatus(401);
+	}
+
+	private Cookie createCookie(String key, String value) {
+		Cookie cookie = new Cookie(key, value);
+		cookie.setMaxAge(60 * 60 * 1000);
+		// TODO : 실제 배포시에는 https true
+		// cookie.setSecure(true);   //local환경이기 때문에 https 불가하기 때문에 지금은 주석처리
+		cookie.setPath("/");
+		cookie.setHttpOnly(true);
+
+		return cookie;
 	}
 
 }

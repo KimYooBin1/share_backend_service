@@ -79,6 +79,7 @@ public class SecurityConfig{
 				.requestMatchers("/admin").hasRole("ADMIN")
 				.anyRequest().authenticated())    //위에서 설정해둔 주소 의외의 모든 주소
 			.addFilterBefore(new JWTFilter(jwtUtil), LoginFilter.class);
+			// .addFilterAfter(new JWTFilter(jwtUtil), OAuth2AuthorizationCodeGrantFilter.class);
 
 		//필터 추가 LoginFilter()는 인자를 받음 (AuthenticationManager() 메소드에 authenticationConfiguration 객체를 넣어야 함) 따라서 등록 필요
 		http
