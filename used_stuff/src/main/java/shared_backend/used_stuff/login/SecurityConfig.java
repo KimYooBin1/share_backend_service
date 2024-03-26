@@ -66,11 +66,11 @@ public class SecurityConfig{
 			.formLogin(AbstractHttpConfigurer::disable)
 			.httpBasic(Customizer.withDefaults())
 
-
-			.oauth2Login((oauth2) -> oauth2
-				.userInfoEndpoint((userInfoEndpointConfig -> userInfoEndpointConfig
-					.userService(customOAuth2UserService)))
-				.successHandler(customSuccessHandler))
+			// TODO : 왜 주석 해제하면 error 발생하는지 확인
+			// .oauth2Login((oauth2) -> oauth2
+			// 	.userInfoEndpoint((userInfoEndpointConfig -> userInfoEndpointConfig
+			// 		.userService(customOAuth2UserService)))
+			// 	.successHandler(customSuccessHandler))
 
 
 			// .httpBasic(AbstractHttpConfigurer::disable) header 에 값을 받아온다? mvc 에서 보안적인 측면으로 활용
