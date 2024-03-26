@@ -3,7 +3,6 @@ HELP.md
 build/
 !gradle/wrapper/gradle-wrapper.jar
 !**/src/main/**/build/
-!**/src/main/resources/application.yml
 !**/src/test/**/build/
 
 ### STS ###
@@ -26,6 +25,7 @@ bin/
 out/
 !**/src/main/**/out/
 !**/src/test/**/out/
+application.yml
 
 ### NetBeans ###
 /nbproject/private/
