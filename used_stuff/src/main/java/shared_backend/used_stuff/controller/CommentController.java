@@ -3,6 +3,7 @@ package shared_backend.used_stuff.controller;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -24,25 +25,25 @@ public class CommentController {
 	private final CommentService commentService;
 
 	@GetMapping("/boards/{board_id}/comments")
-	public Page<CommentResponse> commentList(@PathVariable("board_id") Long boardId,
+	public ResponseEntity<Page<CommentResponse>> commentList(@PathVariable("board_id") Long boardId,
 		@PageableDefault(size = 10) Pageable pageable) {
-		return commentService.comments(boardId, pageable);
+		return ResponseEntity.ok(commentService.comments(boardId, pageable));
 	}
 
 	@PostMapping("/boards/{board_id}/comments/create")
-	public CommentResponse createComment(@PathVariable("board_id") Long boardId,
+	public ResponseEntity<CommentResponse> createComment(@PathVariable("board_id") Long boardId,
 		@RequestBody @Valid CreateCommentRequest request) {
-		return new CommentResponse(commentService.createComment(boardId, request));
+		return ResponseEntity.ok(new CommentResponse(commentService.createComment(boardId, request)));
 	}
 
 	@PostMapping("/comments/{comment_id}/edit")
-	public CommentResponse editComment(@PathVariable("comment_id") Long commentId, @RequestBody UpdateCommentRequest request) {
+	public ResponseEntity<CommentResponse> editComment(@PathVariable("comment_id") Long commentId, @RequestBody UpdateCommentRequest request) {
 		BoardComment comment = commentService.editComment(commentId, request);
-		return new CommentResponse(comment);
+		return ResponseEntity.ok(new CommentResponse(comment));
 	}
 
 	@PostMapping("/comments/{comment_id}/delete")
-	public IdResponse deleteComment(@PathVariable("comment_id") Long commentId, @RequestBody UpdateCommentRequest request) {
-		return new IdResponse(commentService.deleteComment(commentId, request).getId());
+	public ResponseEntity<IdResponse> deleteComment(@PathVariable("comment_id") Long commentId, @RequestBody UpdateCommentRequest request) {
+		return ResponseEntity.ok(new IdResponse(commentService.deleteComment(commentId, request).getId()));
 	}
 }

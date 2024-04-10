@@ -1,13 +1,9 @@
 package shared_backend.used_stuff.controller;
 
-import java.util.Collection;
-import java.util.Iterator;
-
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.GrantedAuthority;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 
 import org.springframework.web.bind.annotation.GetMapping;
@@ -41,48 +37,48 @@ public class UserController {
 	private final ShopBoardService shopBoardService;
 
 	@PostMapping("/join")
-	public IdResponse join(@RequestBody @Valid JoinRequestDto request) {
-		return new IdResponse(userService.createUser(request).getId());
+	public ResponseEntity<IdResponse> join(@RequestBody @Valid JoinRequestDto request) {
+		return ResponseEntity.ok(new IdResponse(userService.createUser(request).getId()));
 	}
 
 	/**
 	 * admin이 user_id 를 통해 조회
 	 */
 	@GetMapping("/admin/user/{user_id}")
-	public UserResponseDto userDetailTest(@PathVariable("user_id") Long id) {
+	public ResponseEntity<UserResponseDto> userDetailTest(@PathVariable("user_id") Long id) {
 		User user = userService.findUser(id);
-		return new UserResponseDto(user.getPassword(), user.getProfile(), user.getPoint());
+		return ResponseEntity.ok(new UserResponseDto(user.getPassword(), user.getProfile(), user.getPoint()));
 	}
 
 	/**
 	 * 일반 user는 자신에 대한 상세 정보만 알 수 있ㄷ다.
 	 */
 	@GetMapping("/user/detail")
-	public UserResponseDto userDetail(){
+	public ResponseEntity<UserResponseDto> userDetail(){
 		Password password = (Password)passwordService.loadUserByUsername(
 			SecurityContextHolder.getContext().getAuthentication().getName());
-		return new UserResponseDto(password, password.getUser().getProfile(), password.getUser().getPoint());
+		return ResponseEntity.ok(new UserResponseDto(password, password.getUser().getProfile(), password.getUser().getPoint()));
 	}
 
 	@GetMapping("/user/orderList")
-	public Page<ShopBoardResponse> orderList(@PageableDefault(size = 10) Pageable pageable, SearchDto search){
+	public ResponseEntity<Page<ShopBoardResponse>> orderList(@PageableDefault(size = 10) Pageable pageable, SearchDto search){
 		// TODO : search sort
 		System.out.println("search = " + search.getType());
-		return shopBoardService.findOrderListByName(
-			SecurityContextHolder.getContext().getAuthentication().getName(), search, pageable);
+		return ResponseEntity.ok(shopBoardService.findOrderListByName(
+			SecurityContextHolder.getContext().getAuthentication().getName(), search, pageable));
 	}
 
 	@PostMapping("/user/edit")
-	public IdResponse userEdit(@RequestBody @Valid UpdateUserRequest request){
-		return new IdResponse(userService.updateUser(request).getId());
+	public ResponseEntity<IdResponse> userEdit(@RequestBody @Valid UpdateUserRequest request){
+		return ResponseEntity.ok(new IdResponse(userService.updateUser(request).getId()));
 	}
 
 	@PostMapping("/user/edit/password")
-	public IdResponse userEditPassword(@RequestBody @Valid UpdatePasswordRequest request) {
-		return new IdResponse(
+	public ResponseEntity<IdResponse> userEditPassword(@RequestBody @Valid UpdatePasswordRequest request) {
+		return ResponseEntity.ok(new IdResponse(
 			passwordService.updatePassword(request)
 				.getUser()
-				.getId());
+				.getId()));
 	}
 	//
 	// @GetMapping("/")
