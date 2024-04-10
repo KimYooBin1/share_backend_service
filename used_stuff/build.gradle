@@ -2,6 +2,7 @@ plugins {
 	id 'java'
 	id 'org.springframework.boot' version '3.2.2'
 	id 'io.spring.dependency-management' version '1.1.4'
+	id 'com.google.cloud.tools.jib' version '3.4.0'
 }
 
 group = 'shared_backend'
@@ -63,4 +64,17 @@ tasks.named('test') {
 }
 clean {
 	delete file('src/main/generated')
+}
+jib{
+	from{
+		image = "openjdk:17"
+
+	}
+	to{
+		image = "cinnamonlol/test-app"
+		tags= ['latest', '0.0.1']
+	}
+	container{
+		creationTime = "USE_CURRENT_TIMESTAMP"
+	}
 }

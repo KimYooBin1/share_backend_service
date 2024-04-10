@@ -1,9 +1,9 @@
 spring:
   datasource:
-    url: ${SPRING_DATASOURCE_URL}
-    username: ${SPRING_DATASOURCE_USERNAME}
-    password: ${SPRING_DATASOURCE_PASSWORD}
-    driver-class-name: ${SPRING_DATASOURCE_DRIVER}
+    url: jdbc:mysql://127.0.0.1:3306/test?useSSL=false
+    username: root
+    password: rladbqls1208
+    driver-class-name: com.mysql.cj.jdbc.Driver
 
   jpa:
     hibernate:
@@ -21,15 +21,15 @@ spring:
         registration:
           naver:
             client-name: naver
-            client-id: ${OAUTH2_ID}
-            client-secret: ${OAUTH2_SECRET}
+            client-id: m_pT5WYQo6xw4gBMXAhM
+            client-secret: Pzo483lfaJ
             redirect-uri: http://localhost:8080/login/oauth2/code/naver
             authorization-grant-type: authorization_code
             scope: name, email
           google:
             client-name: google
-            client-id: ${OAUTH2_ID}
-            client-secret: ${OAUTH2_SECRET}
+            client-id: 978861459277-qjeidlpssgbud6psj6fgmvfm0ibr9jnh.apps.googleusercontent.com
+            client-secret: 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
             redirect-uri: http://localhost:8080/login/oauth2/code/google
             authorization-grant-type: authorization_code
             scope: profile, email
@@ -47,4 +47,4 @@ logging:
 
 
 jwt:
-  secret: ${JWT_SECRET_KEY}
+  secret: c2lsdmVybmluZS10ZWNoLXNwcmluZy1ib290LWp3dC10dXRvcmlhbC1zZWNyZXQtc2lsdmVybmluZS10ZWNoLXNwcmluZy1ib290LWp3dC10dXRvcmlhbC1zZWNyZXQK
