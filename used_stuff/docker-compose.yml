@@ -33,5 +33,17 @@ services:
     networks:
       - backend-net
 
+  web:
+    image: nginx
+    ports:
+      - 80:80
+    volumes:
+      - ./nginx/conf.d:/etc/nginx/conf.d
+    depends_on:
+      - database
+    networks:
+      - backend-net
+
+
 networks:
   backend-net:
