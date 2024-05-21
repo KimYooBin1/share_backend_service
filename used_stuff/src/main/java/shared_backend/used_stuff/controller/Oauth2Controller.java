@@ -9,9 +9,9 @@ import lombok.RequiredArgsConstructor;
 @Controller
 @RequiredArgsConstructor
 public class Oauth2Controller {
-	@GetMapping("/")
-	@ResponseBody
-	public String mainAPI(){
-		return "main route";
-	}
+	// @GetMapping("/")
+	// @ResponseBody
+	// public String mainAPI(){
+	// 	return "main route";
+	// }
 }

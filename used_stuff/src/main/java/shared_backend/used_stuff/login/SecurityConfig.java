@@ -28,7 +28,7 @@ import shared_backend.used_stuff.service.CustomOAuth2UserService;
 @EnableWebSecurity
 @RequiredArgsConstructor
 public class SecurityConfig{
-
+	//TODO : 인가 메시지가 자꾸 출력됨, 반드시 해결해야될 문제
 	private final AuthenticationConfiguration authenticationConfiguration;
 	private final JWTUtil jwtUtil;
 	private final CustomOAuth2UserService customOAuth2UserService;
@@ -72,12 +72,14 @@ public class SecurityConfig{
 			// 		.userService(customOAuth2UserService)))
 			// 	.successHandler(customSuccessHandler))
 
-
 			// .httpBasic(AbstractHttpConfigurer::disable) header 에 값을 받아온다? mvc 에서 보안적인 측면으로 활용
 			.authorizeHttpRequests((auth) -> auth
-				.requestMatchers("/", "/login", "/join", "/boards/**", "/comments/**").permitAll()
-				.requestMatchers("/admin").hasRole("ADMIN")
-				.anyRequest().authenticated())    //위에서 설정해둔 주소 의외의 모든 주소
+				.requestMatchers("/", "/login", "/join", "/boards/**", "/comments/**", "/topic/**", "/app/**")
+				.permitAll()
+				.requestMatchers("/admin")
+				.hasRole("ADMIN")
+				.anyRequest()
+				.authenticated())    //위에서 설정해둔 주소 의외의 모든 주소
 			.addFilterBefore(new JWTFilter(jwtUtil), LoginFilter.class);
 			// .addFilterAfter(new JWTFilter(jwtUtil), OAuth2AuthorizationCodeGrantFilter.class);
 
