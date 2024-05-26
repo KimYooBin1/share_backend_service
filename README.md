@@ -1,5 +1,5 @@
 # SharedBackend
-> 회원가입, 게시판, 중고 물품 판매 기능을 구현한 오픈소스 api
+> spring 공부내용을 적용해보는 토이프로젝트
 
 
 ![](../header.png)
@@ -224,6 +224,9 @@ _더 많은 예제와 사용법은 [Wiki][wiki]를 참고하세요._
     * 로그인
     * naver oauth 적용중
     * 중고 장터 구현중
+* 0.0.2
+   * spring websocket을 사용한 chatting
+   * webrtc에서 signaling server를 구현해 streaming service   
 
 ## stack
 
